@@ -1,0 +1,172 @@
+router_bgp:
+  as: '65200'
+  router_id: 192.168.201.14
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - maximum-paths 4 ecmp 4
+  peer_groups:
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      maximum_routes: 12000
+      send_community: all
+    EVPN-OVERLAY-PEERS:
+      type: evpn
+      update_source: Loopback0
+      bfd: true
+      ebgp_multihop: '3'
+      send_community: all
+      maximum_routes: 0
+      next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+        next_hop:
+          address_family_ipv6_originate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
+  address_family_ipv6:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  neighbor_interfaces:
+    Ethernet5:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65102'
+      description: leaf3_Ethernet6
+    Ethernet6:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65102'
+      description: leaf4_Ethernet6
+    Ethernet7:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65001'
+      description: superspine1_Ethernet6
+    Ethernet8:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65001'
+      description: superspine2_Ethernet6
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+  neighbors:
+    2005:db8::c9:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: superspine1
+      remote_as: '65001'
+    2005:db8::ca:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: superspine2
+      remote_as: '65001'
+    2011:db8::3:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: leaf3
+      remote_as: '65102'
+    2011:db8::4:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: leaf4
+      remote_as: '65102'
+static_routes:
+- vrf: default
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+ipv6_unicast_routing: true
+ip_routing_ipv6_interfaces: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: none
+vrfs:
+  default:
+    ip_routing: false
+management_interfaces:
+  Management1:
+    description: oob_management
+    shutdown: false
+    vrf: default
+    ip_address: 192.168.0.14/24
+    gateway: 192.168.0.1
+    type: oob
+management_api_http:
+  enable_vrfs:
+    default: {}
+  enable_https: true
+ethernet_interfaces:
+  Ethernet5:
+    peer: leaf3
+    peer_interface: Ethernet6
+    peer_type: l3leaf
+    description: P2P_LINK_TO_LEAF3_Ethernet6
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+  Ethernet6:
+    peer: leaf4
+    peer_interface: Ethernet6
+    peer_type: l3leaf
+    description: P2P_LINK_TO_LEAF4_Ethernet6
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+  Ethernet7:
+    peer: superspine1
+    peer_interface: Ethernet6
+    peer_type: super-spine
+    description: P2P_LINK_TO_SUPERSPINE1_Ethernet6
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+  Ethernet8:
+    peer: superspine2
+    peer_interface: Ethernet6
+    peer_type: super-spine
+    description: P2P_LINK_TO_SUPERSPINE2_Ethernet6
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 192.168.201.14/32
+    ipv6_address: 2011:db8::e/128
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 192.168.201.0/24 eq 32
+ipv6_prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY-V6:
+    sequence_numbers:
+      10:
+        action: permit 2011:db8::/64 eq 128
+route_maps:
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+      30:
+        type: permit
+        match:
+        - ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3

@@ -1,0 +1,170 @@
+router_bgp:
+  as: '65001'
+  router_id: 192.168.99.202
+  bgp_defaults:
+  - maximum-paths 4 ecmp 4
+  peer_groups:
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      maximum_routes: 12000
+      send_community: all
+    EVPN-OVERLAY-PEERS:
+      type: evpn
+      update_source: Loopback0
+      bfd: true
+      ebgp_multihop: '3'
+      send_community: all
+      maximum_routes: 0
+      next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+        next_hop:
+          address_family_ipv6_originate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
+  address_family_ipv6:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  neighbor_interfaces:
+    Ethernet3:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65100'
+      description: spine1_Ethernet8
+    Ethernet4:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65100'
+      description: spine2_Ethernet8
+    Ethernet5:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65200'
+      description: spine3_Ethernet8
+    Ethernet6:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65200'
+      description: spine4_Ethernet8
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+  neighbors:
+    2011:db8::b:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: spine1
+      remote_as: '65100'
+    2011:db8::c:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: spine2
+      remote_as: '65100'
+    2011:db8::d:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: spine3
+      remote_as: '65200'
+    2011:db8::e:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: spine4
+      remote_as: '65200'
+static_routes:
+- vrf: default
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+ipv6_unicast_routing: true
+ip_routing_ipv6_interfaces: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: none
+vrfs:
+  default:
+    ip_routing: false
+management_interfaces:
+  Management1:
+    description: oob_management
+    shutdown: false
+    vrf: default
+    ip_address: 192.168.0.26/24
+    gateway: 192.168.0.1
+    type: oob
+management_api_http:
+  enable_vrfs:
+    default: {}
+  enable_https: true
+ethernet_interfaces:
+  Ethernet3:
+    peer: spine1
+    peer_interface: Ethernet8
+    peer_type: spine
+    description: P2P_LINK_TO_SPINE1_Ethernet8
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+  Ethernet4:
+    peer: spine2
+    peer_interface: Ethernet8
+    peer_type: spine
+    description: P2P_LINK_TO_SPINE2_Ethernet8
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+  Ethernet5:
+    peer: spine3
+    peer_interface: Ethernet8
+    peer_type: spine
+    description: P2P_LINK_TO_SPINE3_Ethernet8
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+  Ethernet6:
+    peer: spine4
+    peer_interface: Ethernet8
+    peer_type: spine
+    description: P2P_LINK_TO_SPINE4_Ethernet8
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 192.168.99.202/32
+    ipv6_address: 2005:db8::ca/128
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 192.168.99.0/24 eq 32
+ipv6_prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY-V6:
+    sequence_numbers:
+      10:
+        action: permit 2005:db8::/64 eq 128
+route_maps:
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+      30:
+        type: permit
+        match:
+        - ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3

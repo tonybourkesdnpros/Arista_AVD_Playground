@@ -1,0 +1,65 @@
+---
+CVP_DEVICES:
+  - fqdn: leaf1
+    parentContainerName: DC1_POD1_LEAFS
+    configlets:
+      - AVD_leaf1
+  - fqdn: leaf2
+    parentContainerName: DC1_POD1_LEAFS
+    configlets:
+      - AVD_leaf2
+  - fqdn: leaf3
+    parentContainerName: DC1_POD2_LEAFS
+    configlets:
+      - AVD_leaf3
+  - fqdn: leaf4
+    parentContainerName: DC1_POD2_LEAFS
+    configlets:
+      - AVD_leaf4
+  - fqdn: spine1
+    parentContainerName: DC1_POD1_SPINES
+    configlets:
+      - AVD_spine1
+  - fqdn: spine2
+    parentContainerName: DC1_POD1_SPINES
+    configlets:
+      - AVD_spine2
+  - fqdn: spine3
+    parentContainerName: DC1_POD2_SPINES
+    configlets:
+      - AVD_spine3
+  - fqdn: spine4
+    parentContainerName: DC1_POD2_SPINES
+    configlets:
+      - AVD_spine4
+  - fqdn: superspine1
+    parentContainerName: DC1_SUPERSPINES
+    configlets:
+      - AVD_superspine1
+  - fqdn: superspine2
+    parentContainerName: DC1_SUPERSPINES
+    configlets:
+      - AVD_superspine2
+CVP_CONTAINERS:
+  DC1:
+    parentContainerName: FABRIC
+  DC1_POD1:
+    parentContainerName: DC1
+  DC1_POD1_LEAFS:
+    parentContainerName: DC1_POD1
+  DC1_POD1_SPINES:
+    parentContainerName: DC1_POD1
+  DC1_POD2:
+    parentContainerName: DC1
+  DC1_POD2_LEAFS:
+    parentContainerName: DC1_POD2
+  DC1_POD2_SPINES:
+    parentContainerName: DC1_POD2
+  DC1_SUPERSPINES:
+    parentContainerName: DC1
+  EVPN_SERVICES:
+    parentContainerName: FABRIC
+  FABRIC:
+    parentContainerName: Tenant
+  HOST_CONNECT:
+    parentContainerName: FABRIC
