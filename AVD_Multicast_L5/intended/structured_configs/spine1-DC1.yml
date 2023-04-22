@@ -1,6 +1,6 @@
 router_bgp:
   as: '65001'
-  router_id: 192.168.101.11
+  router_id: 192.168.201.14
   bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
@@ -14,9 +14,9 @@ router_bgp:
       type: evpn
       update_source: Loopback0
       bfd: true
-      ebgp_multihop: '3'
       send_community: all
       maximum_routes: 0
+      ebgp_multihop: 3
       next_hop_unchanged: true
   address_family_ipv4:
     peer_groups:
@@ -28,38 +28,38 @@ router_bgp:
     connected:
       route_map: RM-CONN-2-BGP
   neighbors:
-    192.168.103.1:
+    192.168.103.121:
       peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65100'
-      description: leaf1_Ethernet3
-    192.168.103.7:
+      remote_as: '65120'
+      description: leaf1-DC1_Ethernet3
+    192.168.103.127:
       peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65100'
-      description: leaf2_Ethernet3
-    192.168.103.13:
+      remote_as: '65120'
+      description: leaf2-DC1_Ethernet3
+    192.168.103.133:
       peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65102'
-      description: leaf3_Ethernet3
-    192.168.103.19:
+      remote_as: '65122'
+      description: leaf3-DC1_Ethernet3
+    192.168.103.139:
       peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65102'
-      description: leaf4_Ethernet3
-    192.168.101.1:
+      remote_as: '65122'
+      description: leaf4-DC1_Ethernet3
+    192.168.101.21:
       peer_group: EVPN-OVERLAY-PEERS
-      description: leaf1
-      remote_as: '65100'
-    192.168.101.2:
+      description: leaf1-DC1
+      remote_as: '65120'
+    192.168.101.22:
       peer_group: EVPN-OVERLAY-PEERS
-      description: leaf2
-      remote_as: '65100'
-    192.168.101.3:
+      description: leaf2-DC1
+      remote_as: '65120'
+    192.168.101.23:
       peer_group: EVPN-OVERLAY-PEERS
-      description: leaf3
-      remote_as: '65102'
-    192.168.101.4:
+      description: leaf3-DC1
+      remote_as: '65122'
+    192.168.101.24:
       peer_group: EVPN-OVERLAY-PEERS
-      description: leaf4
-      remote_as: '65102'
+      description: leaf4-DC1
+      remote_as: '65122'
   address_family_evpn:
     peer_groups:
       EVPN-OVERLAY-PEERS:
@@ -70,6 +70,9 @@ static_routes:
   gateway: 192.168.0.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
+router_multicast:
+  ipv4:
+    routing: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -81,7 +84,7 @@ vrfs:
   default:
     ip_routing: false
 management_interfaces:
-  Management1:
+  Management0:
     description: oob_management
     shutdown: false
     vrf: default
@@ -94,51 +97,63 @@ management_api_http:
   enable_https: true
 ethernet_interfaces:
   Ethernet2:
-    peer: leaf1
+    peer: leaf1-DC1
     peer_interface: Ethernet3
     peer_type: l3leaf
-    description: P2P_LINK_TO_LEAF1_Ethernet3
+    description: P2P_LINK_TO_LEAF1-DC1_Ethernet3
+    shutdown: false
     mtu: 1500
     type: routed
-    shutdown: false
-    ip_address: 192.168.103.0/31
+    ip_address: 192.168.103.120/31
+    pim:
+      ipv4:
+        sparse_mode: true
   Ethernet3:
-    peer: leaf2
+    peer: leaf2-DC1
     peer_interface: Ethernet3
     peer_type: l3leaf
-    description: P2P_LINK_TO_LEAF2_Ethernet3
+    description: P2P_LINK_TO_LEAF2-DC1_Ethernet3
+    shutdown: false
     mtu: 1500
     type: routed
-    shutdown: false
-    ip_address: 192.168.103.6/31
+    ip_address: 192.168.103.126/31
+    pim:
+      ipv4:
+        sparse_mode: true
   Ethernet4:
-    peer: leaf3
+    peer: leaf3-DC1
     peer_interface: Ethernet3
     peer_type: l3leaf
-    description: P2P_LINK_TO_LEAF3_Ethernet3
+    description: P2P_LINK_TO_LEAF3-DC1_Ethernet3
+    shutdown: false
     mtu: 1500
     type: routed
-    shutdown: false
-    ip_address: 192.168.103.12/31
+    ip_address: 192.168.103.132/31
+    pim:
+      ipv4:
+        sparse_mode: true
   Ethernet5:
-    peer: leaf4
+    peer: leaf4-DC1
     peer_interface: Ethernet3
     peer_type: l3leaf
-    description: P2P_LINK_TO_LEAF4_Ethernet3
+    description: P2P_LINK_TO_LEAF4-DC1_Ethernet3
+    shutdown: false
     mtu: 1500
     type: routed
-    shutdown: false
-    ip_address: 192.168.103.18/31
+    ip_address: 192.168.103.138/31
+    pim:
+      ipv4:
+        sparse_mode: true
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
     shutdown: false
-    ip_address: 192.168.101.11/32
+    ip_address: 192.168.201.14/32
 prefix_lists:
   PL-LOOPBACKS-EVPN-OVERLAY:
     sequence_numbers:
       10:
-        action: permit 192.168.101.0/24 eq 32
+        action: permit 192.168.201.0/24 eq 32
 route_maps:
   RM-CONN-2-BGP:
     sequence_numbers:

@@ -1,0 +1,254 @@
+router_bgp:
+  as: '65220'
+  router_id: 192.168.201.21
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
+  - maximum-paths 4 ecmp 4
+  peer_groups:
+    MLAG-IPv4-UNDERLAY-PEER:
+      type: ipv4
+      remote_as: '65220'
+      next_hop_self: true
+      description: leaf2-DC2
+      maximum_routes: 12000
+      send_community: all
+      route_map_in: RM-MLAG-PEER-IN
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      maximum_routes: 12000
+      send_community: all
+    EVPN-OVERLAY-PEERS:
+      type: evpn
+      update_source: Loopback0
+      bfd: true
+      send_community: all
+      maximum_routes: 0
+      ebgp_multihop: 3
+  address_family_ipv4:
+    peer_groups:
+      MLAG-IPv4-UNDERLAY-PEER:
+        activate: true
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
+  neighbors:
+    10.255.251.41:
+      peer_group: MLAG-IPv4-UNDERLAY-PEER
+      description: leaf2-DC2
+    192.168.203.120:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65002'
+      description: spine1-DC2_Ethernet2
+    192.168.203.122:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65002'
+      description: spine2-DC2_Ethernet2
+    192.168.203.124:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65002'
+      description: spine3-DC2_Ethernet1
+    192.168.201.14:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: spine1-DC2
+      remote_as: '65002'
+    192.168.201.15:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: spine2-DC2
+      remote_as: '65002'
+    192.168.201.16:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: spine3-DC2
+      remote_as: '65002'
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+static_routes:
+- vrf: default
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+router_multicast:
+  ipv4:
+    routing: true
+    software_forwarding: sfe
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: mstp
+  mst_instances:
+    '0':
+      priority: 16384
+  no_spanning_tree_vlan: 4093-4094
+vrfs:
+  default:
+    ip_routing: false
+management_interfaces:
+  Management0:
+    description: oob_management
+    shutdown: false
+    vrf: default
+    ip_address: 192.168.0.31/24
+    gateway: 192.168.0.1
+    type: oob
+management_api_http:
+  enable_vrfs:
+    default: {}
+  enable_https: true
+vlans:
+  4093:
+    tenant: system
+    name: LEAF_PEER_L3
+    trunk_groups:
+    - LEAF_PEER_L3
+  4094:
+    tenant: system
+    name: MLAG_PEER
+    trunk_groups:
+    - MLAG
+vlan_interfaces:
+  Vlan4093:
+    description: MLAG_PEER_L3_PEERING
+    shutdown: false
+    mtu: 1500
+    ip_address: 10.255.251.40/31
+    pim:
+      ipv4:
+        sparse_mode: true
+  Vlan4094:
+    description: MLAG_PEER
+    shutdown: false
+    ip_address: 10.255.252.40/31
+    no_autostate: true
+    mtu: 1500
+port_channel_interfaces:
+  Port-Channel1:
+    description: MLAG_PEER_leaf2-DC2_Po1
+    type: switched
+    shutdown: false
+    vlans: 2-4094
+    mode: trunk
+    trunk_groups:
+    - LEAF_PEER_L3
+    - MLAG
+ethernet_interfaces:
+  Ethernet1:
+    peer: leaf2-DC2
+    peer_interface: Ethernet1
+    peer_type: mlag_peer
+    description: MLAG_PEER_leaf2-DC2_Ethernet1
+    type: switched
+    shutdown: false
+    channel_group:
+      id: 1
+      mode: active
+  Ethernet2:
+    peer: leaf2-DC2
+    peer_interface: Ethernet2
+    peer_type: mlag_peer
+    description: MLAG_PEER_leaf2-DC2_Ethernet2
+    type: switched
+    shutdown: false
+    channel_group:
+      id: 1
+      mode: active
+  Ethernet3:
+    peer: spine1-DC2
+    peer_interface: Ethernet2
+    peer_type: spine
+    description: P2P_LINK_TO_SPINE1-DC2_Ethernet2
+    shutdown: false
+    mtu: 1500
+    type: routed
+    ip_address: 192.168.203.121/31
+    pim:
+      ipv4:
+        sparse_mode: true
+  Ethernet4:
+    peer: spine2-DC2
+    peer_interface: Ethernet2
+    peer_type: spine
+    description: P2P_LINK_TO_SPINE2-DC2_Ethernet2
+    shutdown: false
+    mtu: 1500
+    type: routed
+    ip_address: 192.168.203.123/31
+    pim:
+      ipv4:
+        sparse_mode: true
+  Ethernet5:
+    peer: spine3-DC2
+    peer_interface: Ethernet1
+    peer_type: spine
+    description: P2P_LINK_TO_SPINE3-DC2_Ethernet1
+    shutdown: false
+    mtu: 1500
+    type: routed
+    ip_address: 192.168.203.125/31
+    pim:
+      ipv4:
+        sparse_mode: true
+mlag_configuration:
+  domain_id: mlag1
+  local_interface: Vlan4094
+  peer_address: 10.255.252.41
+  peer_link: Port-Channel1
+  reload_delay_mlag: 300
+  reload_delay_non_mlag: 330
+route_maps:
+  RM-MLAG-PEER-IN:
+    sequence_numbers:
+      10:
+        type: permit
+        set:
+        - origin incomplete
+        description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 192.168.201.21/32
+  Loopback1:
+    description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
+    ip_address: 192.168.202.21/32
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 192.168.201.0/24 eq 32
+      20:
+        action: permit 192.168.202.0/24 eq 32
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:00:99
+vxlan_interface:
+  Vxlan1:
+    description: leaf1-DC2_VTEP
+    vxlan:
+      udp_port: 4789
+      source_interface: Loopback0
+      mlag_source_interface: Loopback1
+      virtual_router_encapsulation_mac_address: mlag-system-id

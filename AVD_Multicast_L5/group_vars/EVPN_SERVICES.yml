@@ -2,17 +2,41 @@
 tenants:
   ACME:
     mac_vrf_vni_base: 10000
+    evpn_l3_multicast:
+      # Enabled =
+      #  - Enable multicast-routing on VRF
+      #  - If node is a vtep and evpn enabled, enable EVPN multicast
+      enabled: true
+      evpn_underlay_l3_multicast_group_ipv4_pool: 232.0.32.0/20
+      evpn_underlay_l3_multicast_group_ipv4_pool_offset: 1
     vrfs:
+      # Inherits from Tenant C
       VRF_A:
+        description: "Multicast Enabled VRF"
+        vtep_diagnostic:
+          loopback: 99
+          loopback_ip_range: 10.255.1.0/24
         vrf_vni: 10
         svis:
-          "10":
-            # SVI Description
-            name: DMZ
+          # Expected results:
+          #  - VRF L3_MULTICAST_ENABLED_130_131 enabled for Multicast:
+          #      - 'evpn multicast' configured on VRF
+          #      - Multicast routing enabled in VRF
+          #      - No PIM config
+          #      - Underlay group configured for VRF on Vxlan1 interface
+          #          - 232.0.32.31
+          #      - On SVI 130 on LEAF1A/B (MLAG): pim ipv4 sparse-mode & local-interface
+          #      - On SVI 130 on LEAF2A/3A/3B (Standalone/A-A): ip igmp & pim local-interface
+          #      - On SVI 131 on LEAF1A/B (MLAG): pim ipv4 sparse-mode
+          #      - On SVI 131 on LEAF2A/3A/3B (Standalone/A-A): ip igmp
+          #      - Lack of loopback triggers error
+          130:
+            name: "VLAN_130"
+            tags: ['test']
             enabled: true
             ip_address_virtual: 10.1.10.1/24
-          "20":
-            name: Internal
+          131:
+            name: "VLAN_131"
+            tags: ['test']
             enabled: true
             ip_address_virtual: 10.1.20.1/24
-
