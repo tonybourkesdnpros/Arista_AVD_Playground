@@ -17,6 +17,10 @@
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision |
 | --- | ---- | ---- | ------------- | -------- | -------------------------- |
+| FABRIC | l3leaf | borderleaf1-DC1 | 192.168.0.25/24 | - | Provisioned |
+| FABRIC | l3leaf | borderleaf1-DC2 | 192.168.0.35/24 | - | Provisioned |
+| FABRIC | l3leaf | borderleaf2-DC1 | 192.168.0.26/24 | - | Provisioned |
+| FABRIC | l3leaf | borderleaf2-DC2 | 192.168.0.36/24 | - | Provisioned |
 | FABRIC | l3leaf | leaf1-DC1 | 192.168.0.21/24 | - | Provisioned |
 | FABRIC | l3leaf | leaf1-DC2 | 192.168.0.31/24 | - | Provisioned |
 | FABRIC | l3leaf | leaf2-DC1 | 192.168.0.22/24 | - | Provisioned |
@@ -42,6 +46,22 @@
 
 | Type | Node | Node Interface | Peer Type | Peer Node | Peer Interface |
 | ---- | ---- | -------------- | --------- | ----------| -------------- |
+| l3leaf | borderleaf1-DC1 | Ethernet1 | mlag_peer | borderleaf2-DC1 | Ethernet1 |
+| l3leaf | borderleaf1-DC1 | Ethernet2 | mlag_peer | borderleaf2-DC1 | Ethernet2 |
+| l3leaf | borderleaf1-DC1 | Ethernet3 | spine | spine1-DC1 | Ethernet6 |
+| l3leaf | borderleaf1-DC1 | Ethernet4 | spine | spine2-DC1 | Ethernet6 |
+| l3leaf | borderleaf1-DC1 | Ethernet5 | spine | spine3-DC1 | Ethernet6 |
+| l3leaf | borderleaf1-DC2 | Ethernet1 | mlag_peer | borderleaf2-DC2 | Ethernet1 |
+| l3leaf | borderleaf1-DC2 | Ethernet2 | mlag_peer | borderleaf2-DC2 | Ethernet2 |
+| l3leaf | borderleaf1-DC2 | Ethernet3 | spine | spine1-DC2 | Ethernet6 |
+| l3leaf | borderleaf1-DC2 | Ethernet4 | spine | spine2-DC2 | Ethernet6 |
+| l3leaf | borderleaf1-DC2 | Ethernet5 | spine | spine3-DC2 | Ethernet6 |
+| l3leaf | borderleaf2-DC1 | Ethernet3 | spine | spine1-DC1 | Ethernet7 |
+| l3leaf | borderleaf2-DC1 | Ethernet4 | spine | spine2-DC1 | Ethernet7 |
+| l3leaf | borderleaf2-DC1 | Ethernet5 | spine | spine3-DC1 | Ethernet7 |
+| l3leaf | borderleaf2-DC2 | Ethernet3 | spine | spine1-DC2 | Ethernet6 |
+| l3leaf | borderleaf2-DC2 | Ethernet4 | spine | spine2-DC2 | Ethernet6 |
+| l3leaf | borderleaf2-DC2 | Ethernet5 | spine | spine3-DC2 | Ethernet6 |
 | l3leaf | leaf1-DC1 | Ethernet1 | mlag_peer | leaf2-DC1 | Ethernet1 |
 | l3leaf | leaf1-DC1 | Ethernet2 | mlag_peer | leaf2-DC1 | Ethernet2 |
 | l3leaf | leaf1-DC1 | Ethernet3 | spine | spine1-DC1 | Ethernet2 |
@@ -93,13 +113,17 @@
 
 | Loopback Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ------------- | ------------------- | ------------------ | ------------------ |
-| 192.168.101.0/24 | 256 | 10 | 3.91 % |
-| 192.168.201.0/24 | 256 | 4 | 1.57 % |
+| 192.168.101.0/24 | 256 | 12 | 4.69 % |
+| 192.168.201.0/24 | 256 | 6 | 2.35 % |
 
 ## Loopback0 Interfaces Node Allocation
 
 | POD | Node | Loopback0 |
 | --- | ---- | --------- |
+| FABRIC | borderleaf1-DC1 | 192.168.101.5/32 |
+| FABRIC | borderleaf1-DC2 | 192.168.201.5/32 |
+| FABRIC | borderleaf2-DC1 | 192.168.101.6/32 |
+| FABRIC | borderleaf2-DC2 | 192.168.201.6/32 |
 | FABRIC | leaf1-DC1 | 192.168.101.1/32 |
 | FABRIC | leaf1-DC2 | 192.168.201.1/32 |
 | FABRIC | leaf2-DC1 | 192.168.101.2/32 |
@@ -119,13 +143,17 @@
 
 | VTEP Loopback Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | --------------------- | ------------------- | ------------------ | ------------------ |
-| 192.168.102.0/24 | 256 | 4 | 1.57 % |
-| 192.168.202.0/24 | 256 | 4 | 1.57 % |
+| 192.168.102.0/24 | 256 | 6 | 2.35 % |
+| 192.168.202.0/24 | 256 | 6 | 2.35 % |
 
 ## VTEP Loopback Node allocation
 
 | POD | Node | Loopback1 |
 | --- | ---- | --------- |
+| FABRIC | borderleaf1-DC1 | 192.168.102.5/32 |
+| FABRIC | borderleaf1-DC2 | 192.168.202.5/32 |
+| FABRIC | borderleaf2-DC1 | 192.168.102.5/32 |
+| FABRIC | borderleaf2-DC2 | 192.168.202.5/32 |
 | FABRIC | leaf1-DC1 | 192.168.102.1/32 |
 | FABRIC | leaf1-DC2 | 192.168.202.1/32 |
 | FABRIC | leaf2-DC1 | 192.168.102.1/32 |

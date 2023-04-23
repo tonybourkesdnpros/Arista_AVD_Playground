@@ -121,7 +121,7 @@ management api http-commands
 
 | Domain-id | Local-interface | Peer-address | Peer-link |
 | --------- | --------------- | ------------ | --------- |
-| mlag2 | Vlan4094 | 10.255.252.5 | Port-Channel1 |
+| dc1_mlag2 | Vlan4094 | 10.255.252.5 | Port-Channel1 |
 
 Dual primary detection is disabled.
 
@@ -130,7 +130,7 @@ Dual primary detection is disabled.
 ```eos
 !
 mlag configuration
-   domain-id mlag2
+   domain-id dc1_mlag2
    local-interface Vlan4094
    peer-address 10.255.252.5
    peer-link Port-Channel1

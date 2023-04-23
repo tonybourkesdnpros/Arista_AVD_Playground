@@ -1,5 +1,21 @@
 ---
 CVP_DEVICES:
+  - fqdn: borderleaf1-DC1
+    parentContainerName: DC1_LEAFS
+    configlets:
+      - AVD_borderleaf1-DC1
+  - fqdn: borderleaf1-DC2
+    parentContainerName: DC2_LEAFS
+    configlets:
+      - AVD_borderleaf1-DC2
+  - fqdn: borderleaf2-DC1
+    parentContainerName: DC1_LEAFS
+    configlets:
+      - AVD_borderleaf2-DC1
+  - fqdn: borderleaf2-DC2
+    parentContainerName: DC2_LEAFS
+    configlets:
+      - AVD_borderleaf2-DC2
   - fqdn: leaf1-DC1
     parentContainerName: DC1_LEAFS
     configlets:

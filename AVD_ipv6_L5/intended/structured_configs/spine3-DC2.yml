@@ -50,11 +50,23 @@ router_bgp:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65203'
       description: leaf4-DC2_Ethernet5
+    Ethernet6:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65205'
+      description: borderleaf2-DC2_Ethernet5
   address_family_evpn:
     peer_groups:
       EVPN-OVERLAY-PEERS:
         activate: true
   neighbors:
+    192.168.201.5:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: borderleaf1-DC2
+      remote_as: '65205'
+    192.168.201.6:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: borderleaf2-DC2
+      remote_as: '65205'
     192.168.201.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: leaf1-DC2
@@ -134,6 +146,15 @@ ethernet_interfaces:
     peer_interface: Ethernet5
     peer_type: l3leaf
     description: P2P_LINK_TO_LEAF4-DC2_Ethernet5
+    mtu: 1500
+    type: routed
+    shutdown: false
+    ipv6_enable: true
+  Ethernet6:
+    peer: borderleaf2-DC2
+    peer_interface: Ethernet5
+    peer_type: l3leaf
+    description: P2P_LINK_TO_BORDERLEAF2-DC2_Ethernet5
     mtu: 1500
     type: routed
     shutdown: false

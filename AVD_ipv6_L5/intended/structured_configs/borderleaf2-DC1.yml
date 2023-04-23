@@ -1,6 +1,6 @@
 router_bgp:
-  as: '65103'
-  router_id: 192.168.101.4
+  as: '65105'
+  router_id: 192.168.101.6
   bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
@@ -10,9 +10,9 @@ router_bgp:
   peer_groups:
     MLAG-IPv4-UNDERLAY-PEER:
       type: ipv4
-      remote_as: '65103'
+      remote_as: '65105'
       next_hop_self: true
-      description: leaf3-DC1
+      description: borderleaf1-DC1
       maximum_routes: 12000
       send_community: all
       route_map_in: RM-MLAG-PEER-IN
@@ -48,20 +48,20 @@ router_bgp:
   neighbor_interfaces:
     Vlan4093:
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      remote_as: '65103'
-      description: leaf3-DC1
+      remote_as: '65105'
+      description: borderleaf1-DC1
     Ethernet3:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65100'
-      description: spine1-DC1_Ethernet5
+      description: spine1-DC1_Ethernet7
     Ethernet4:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65100'
-      description: spine2-DC1_Ethernet5
+      description: spine2-DC1_Ethernet7
     Ethernet5:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65100'
-      description: spine3-DC1_Ethernet5
+      description: spine3-DC1_Ethernet7
   redistribute_routes:
     connected:
       route_map: RM-CONN-2-BGP
@@ -109,7 +109,7 @@ management_interfaces:
     description: oob_management
     shutdown: false
     vrf: default
-    ip_address: 192.168.0.24/24
+    ip_address: 192.168.0.26/24
     gateway: 192.168.0.1
     type: oob
 management_api_http:
@@ -136,12 +136,12 @@ vlan_interfaces:
   Vlan4094:
     description: MLAG_PEER
     shutdown: false
-    ip_address: 10.255.252.5/31
+    ip_address: 10.255.252.9/31
     no_autostate: true
     mtu: 1500
 port_channel_interfaces:
   Port-Channel1:
-    description: MLAG_PEER_leaf3-DC1_Po1
+    description: MLAG_PEER_borderleaf1-DC1_Po1
     type: switched
     shutdown: false
     vlans: 2-4094
@@ -151,20 +151,20 @@ port_channel_interfaces:
     - MLAG
 ethernet_interfaces:
   Ethernet1:
-    peer: leaf3-DC1
+    peer: borderleaf1-DC1
     peer_interface: Ethernet1
     peer_type: mlag_peer
-    description: MLAG_PEER_leaf3-DC1_Ethernet1
+    description: MLAG_PEER_borderleaf1-DC1_Ethernet1
     type: switched
     shutdown: false
     channel_group:
       id: 1
       mode: active
   Ethernet2:
-    peer: leaf3-DC1
+    peer: borderleaf1-DC1
     peer_interface: Ethernet2
     peer_type: mlag_peer
-    description: MLAG_PEER_leaf3-DC1_Ethernet2
+    description: MLAG_PEER_borderleaf1-DC1_Ethernet2
     type: switched
     shutdown: false
     channel_group:
@@ -172,35 +172,35 @@ ethernet_interfaces:
       mode: active
   Ethernet3:
     peer: spine1-DC1
-    peer_interface: Ethernet5
+    peer_interface: Ethernet7
     peer_type: spine
-    description: P2P_LINK_TO_SPINE1-DC1_Ethernet5
+    description: P2P_LINK_TO_SPINE1-DC1_Ethernet7
     mtu: 1500
     type: routed
     shutdown: false
     ipv6_enable: true
   Ethernet4:
     peer: spine2-DC1
-    peer_interface: Ethernet5
+    peer_interface: Ethernet7
     peer_type: spine
-    description: P2P_LINK_TO_SPINE2-DC1_Ethernet5
+    description: P2P_LINK_TO_SPINE2-DC1_Ethernet7
     mtu: 1500
     type: routed
     shutdown: false
     ipv6_enable: true
   Ethernet5:
     peer: spine3-DC1
-    peer_interface: Ethernet5
+    peer_interface: Ethernet7
     peer_type: spine
-    description: P2P_LINK_TO_SPINE3-DC1_Ethernet5
+    description: P2P_LINK_TO_SPINE3-DC1_Ethernet7
     mtu: 1500
     type: routed
     shutdown: false
     ipv6_enable: true
 mlag_configuration:
-  domain_id: dc1_mlag2
+  domain_id: dc1_mlag3
   local_interface: Vlan4094
-  peer_address: 10.255.252.4
+  peer_address: 10.255.252.8
   peer_link: Port-Channel1
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
@@ -226,12 +226,12 @@ loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
     shutdown: false
-    ip_address: 192.168.101.4/32
-    ipv6_address: 2001:db8:1::4/128
+    ip_address: 192.168.101.6/32
+    ipv6_address: 2001:db8:1::6/128
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
     shutdown: false
-    ip_address: 192.168.102.3/32
+    ip_address: 192.168.102.5/32
 prefix_lists:
   PL-LOOPBACKS-EVPN-OVERLAY:
     sequence_numbers:
@@ -254,7 +254,7 @@ ip_igmp_snooping:
 ip_virtual_router_mac_address: 00:1c:73:00:00:99
 vxlan_interface:
   Vxlan1:
-    description: leaf4-DC1_VTEP
+    description: borderleaf2-DC1_VTEP
     vxlan:
       source_interface: Loopback1
       virtual_router_encapsulation_mac_address: mlag-system-id

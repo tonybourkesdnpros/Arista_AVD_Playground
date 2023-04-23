@@ -53,6 +53,10 @@ all:
                   ansible_host: 192.168.0.23
                 leaf4-DC1:
                   ansible_host: 192.168.0.24
+                borderleaf1-DC1:
+                  ansible_host: 192.168.0.25
+                borderleaf2-DC1:
+                  ansible_host: 192.168.0.26
         DC2:
           children:
             DC2_SPINES:
@@ -77,6 +81,10 @@ all:
                   ansible_host: 192.168.0.33
                 leaf4-DC2:
                   ansible_host: 192.168.0.34
+                borderleaf1-DC2:
+                  ansible_host: 192.168.0.35
+                borderleaf2-DC2:
+                  ansible_host: 192.168.0.36
         EVPN_SERVICES:
           children:
             LEAFS:

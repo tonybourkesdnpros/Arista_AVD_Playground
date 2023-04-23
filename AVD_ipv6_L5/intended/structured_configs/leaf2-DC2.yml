@@ -198,7 +198,7 @@ ethernet_interfaces:
     shutdown: false
     ipv6_enable: true
 mlag_configuration:
-  domain_id: mlag1
+  domain_id: dc2_mlag1
   local_interface: Vlan4094
   peer_address: 10.255.252.0
   peer_link: Port-Channel1

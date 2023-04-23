@@ -4,7 +4,7 @@ spine:
   defaults:
 #    platform: vEOS-LAB # 
     bgp_as: 65200
-    # loopback_ipv4_pool: 192.168.101.0/24
+    loopback_ipv4_pool: 192.168.101.0/24
     loopback_ipv6_pool: 2001:db8:2::/64
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
@@ -26,7 +26,7 @@ l3leaf:
   defaults:
     bgp_as: 65201-65299 # Gives a range which will be auto-assigned
 #    platform: vEOS-LAB
-    # loopback_ipv4_pool: 192.168.201.0/24 # This is loopback0 (underlay)
+    loopback_ipv4_pool: 192.168.201.0/24 # This is loopback0 (underlay)
     loopback_ipv6_pool: 2001:db8:1::/64
     vtep_loopback_ipv4_pool: 192.168.202.0/24 # This is loopback1 (VTEP)
     uplink_interfaces: [Ethernet3, Ethernet4, Ethernet5] # Leaf uplinks
@@ -46,7 +46,7 @@ l3leaf:
     mlag: true # By default, use MLAG
 
   node_groups:
-    mlag1:
+    dc2_mlag1:
       nodes:
         leaf1-DC2:
           id: 1
@@ -56,7 +56,7 @@ l3leaf:
           id: 2
           mgmt_ip: 192.168.0.32/24
           uplink_switch_interfaces: [Ethernet3, Ethernet3, Ethernet3]
-    mlag2:
+    dc2_mlag2:
       nodes:
         leaf3-DC2:
           id: 3
@@ -66,4 +66,13 @@ l3leaf:
           id: 4
           mgmt_ip: 192.168.0.34/24
           uplink_switch_interfaces: [Ethernet5, Ethernet5, Ethernet5]
-
+    dc2_mlag3:
+      nodes:
+        borderleaf1-DC2:
+          id: 5
+          mgmt_ip: 192.168.0.35/24
+          uplink_switch_interfaces: [Ethernet6, Ethernet6, Ethernet6]
+        borderleaf2-DC2:
+          id: 6
+          mgmt_ip: 192.168.0.36/24
+          uplink_switch_interfaces: [Ethernet6, Ethernet6, Ethernet6]
