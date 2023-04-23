@@ -27,7 +27,6 @@
 - [Multicast](#multicast)
 - [Filters](#filters)
   - [Prefix-lists](#prefix-lists)
-  - [IPv6 Prefix-lists](#ipv6-prefix-lists)
   - [Route-maps](#route-maps)
 - [ACL](#acl)
 - [VRF Instances](#vrf-instances)
@@ -201,7 +200,7 @@ interface Ethernet4
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | EVPN_Overlay_Peering | default | 2000:db8::1/128 |
+| Loopback0 | EVPN_Overlay_Peering | default | - |
 
 
 ### Loopback Interfaces Device Configuration
@@ -212,7 +211,6 @@ interface Loopback0
    description EVPN_Overlay_Peering
    no shutdown
    ip address 192.168.99.1/32
-   ipv6 address 2000:db8::1/128
 ```
 
 # Routing
@@ -246,16 +244,8 @@ ip routing
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | True |
+| default | False |
 | default | false |
-
-### IPv6 Routing Device Configuration
-
-```eos
-!
-ipv6 unicast-routing
-ip routing ipv6 interfaces
-```
 
 ## Static Routes
 
@@ -312,6 +302,7 @@ ip route 0.0.0.0/0 192.168.0.1
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- |
 | 172.31.252.0 | 65199 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - |
 | 172.31.252.2 | 65199 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - |
+| 172.31.252.4 | 65299 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - |
 | 172.31.252.6 | 65299 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - |
 | 192.168.101.5 | 65199 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - |
 | 192.168.101.6 | 65199 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - |
@@ -349,6 +340,9 @@ router bgp 65000
    neighbor 172.31.252.2 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.252.2 remote-as 65199
    neighbor 172.31.252.2 description borderleaf2-DC1
+   neighbor 172.31.252.4 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.252.4 remote-as 65299
+   neighbor 172.31.252.4 description borderleaf1-DC2
    neighbor 172.31.252.6 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.252.6 remote-as 65299
    neighbor 172.31.252.6 description borderleaf2-DC2
@@ -371,10 +365,6 @@ router bgp 65000
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate
-      neighbor IPv4-UNDERLAY-PEERS activate
-   !
-   address-family ipv6
       neighbor IPv4-UNDERLAY-PEERS activate
 ```
 
@@ -418,24 +408,6 @@ ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 192.168.99.0/24 eq 32
 ```
 
-## IPv6 Prefix-lists
-
-### IPv6 Prefix-lists Summary
-
-#### PL-LOOPBACKS-EVPN-OVERLAY-V6
-
-| Sequence | Action |
-| -------- | ------ |
-| 10 | permit 2000:db8::/64 eq 128 |
-
-### IPv6 Prefix-lists Device Configuration
-
-```eos
-!
-ipv6 prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
-   seq 10 permit 2000:db8::/64 eq 128
-```
-
 ## Route-maps
 
 ### Route-maps Summary
@@ -445,7 +417,6 @@ ipv6 prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 | Sequence | Type | Match | Set | Sub-Route-Map | Continue |
 | -------- | ---- | ----- | --- | ------------- | -------- |
 | 10 | permit | ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY | - | - | - |
-| 30 | permit | ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6 | - | - | - |
 
 ### Route-maps Device Configuration
 
@@ -453,9 +424,6 @@ ipv6 prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 !
 route-map RM-CONN-2-BGP permit 10
    match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-!
-route-map RM-CONN-2-BGP permit 30
-   match ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 ```
 
 # ACL

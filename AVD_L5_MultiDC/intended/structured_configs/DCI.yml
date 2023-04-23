@@ -20,14 +20,8 @@ router_bgp:
     peer_groups:
       IPv4-UNDERLAY-PEERS:
         activate: true
-        next_hop:
-          address_family_ipv6_originate: true
       EVPN-OVERLAY-PEERS:
         activate: false
-  address_family_ipv6:
-    peer_groups:
-      IPv4-UNDERLAY-PEERS:
-        activate: true
   redistribute_routes:
     connected:
       route_map: RM-CONN-2-BGP
@@ -60,6 +54,10 @@ router_bgp:
       remote_as: '65199'
       description: borderleaf2-DC1
       peer_group: IPv4-UNDERLAY-PEERS
+    172.31.252.4:
+      remote_as: '65299'
+      description: borderleaf1-DC2
+      peer_group: IPv4-UNDERLAY-PEERS
     172.31.252.6:
       remote_as: '65299'
       description: borderleaf2-DC2
@@ -70,8 +68,6 @@ static_routes:
   gateway: 192.168.0.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
-ipv6_unicast_routing: true
-ip_routing_ipv6_interfaces: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -99,17 +95,11 @@ loopback_interfaces:
     description: EVPN_Overlay_Peering
     shutdown: false
     ip_address: 192.168.99.1/32
-    ipv6_address: 2000:db8::1/128
 prefix_lists:
   PL-LOOPBACKS-EVPN-OVERLAY:
     sequence_numbers:
       10:
         action: permit 192.168.99.0/24 eq 32
-ipv6_prefix_lists:
-  PL-LOOPBACKS-EVPN-OVERLAY-V6:
-    sequence_numbers:
-      10:
-        action: permit 2000:db8::/64 eq 128
 route_maps:
   RM-CONN-2-BGP:
     sequence_numbers:
@@ -117,10 +107,6 @@ route_maps:
         type: permit
         match:
         - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-      30:
-        type: permit
-        match:
-        - ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 router_bfd:
   multihop:
     interval: 300

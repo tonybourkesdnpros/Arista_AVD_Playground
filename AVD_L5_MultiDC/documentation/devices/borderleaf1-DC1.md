@@ -38,7 +38,6 @@
   - [IP IGMP Snooping](#ip-igmp-snooping)
 - [Filters](#filters)
   - [Prefix-lists](#prefix-lists)
-  - [IPv6 Prefix-lists](#ipv6-prefix-lists)
   - [Route-maps](#route-maps)
 - [ACL](#acl)
 - [VRF Instances](#vrf-instances)
@@ -232,15 +231,10 @@ vlan 4094
 
 | Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet3 | P2P_LINK_TO_SPINE1-DC1_Ethernet6 | routed | - | 192.168.103.25/31 | default | 1500 | False | - | - |
+| Ethernet4 | P2P_LINK_TO_SPINE2-DC1_Ethernet6 | routed | - | 192.168.103.27/31 | default | 1500 | False | - | - |
+| Ethernet5 | P2P_LINK_TO_SPINE3-DC1_Ethernet6 | routed | - | 192.168.103.29/31 | default | 1500 | False | - | - |
 | Ethernet12 | P2P_LINK_TO_DCI_Ethernet1 | routed | - | 172.31.252.0/31 | default | 1500 | False | - | - |
-
-#### IPv6
-
-| Interface | Description | Type | Channel Group | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
-| --------- | ----------- | ---- | --------------| ------------ | --- | --- | -------- | -------------- | -------------------| ----------- | ------------ |
-| Ethernet3 | P2P_LINK_TO_SPINE1-DC1_Ethernet6 | routed | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet4 | P2P_LINK_TO_SPINE2-DC1_Ethernet6 | routed | - | - | default | 1500 | False | - | - | - | - |
-| Ethernet5 | P2P_LINK_TO_SPINE3-DC1_Ethernet6 | routed | - | - | default | 1500 | False | - | - | - | - |
 
 ### Ethernet Interfaces Device Configuration
 
@@ -261,21 +255,21 @@ interface Ethernet3
    no shutdown
    mtu 1500
    no switchport
-   ipv6 enable
+   ip address 192.168.103.25/31
 !
 interface Ethernet4
    description P2P_LINK_TO_SPINE2-DC1_Ethernet6
    no shutdown
    mtu 1500
    no switchport
-   ipv6 enable
+   ip address 192.168.103.27/31
 !
 interface Ethernet5
    description P2P_LINK_TO_SPINE3-DC1_Ethernet6
    no shutdown
    mtu 1500
    no switchport
-   ipv6 enable
+   ip address 192.168.103.29/31
 !
 interface Ethernet12
    description P2P_LINK_TO_DCI_Ethernet1
@@ -324,7 +318,7 @@ interface Port-Channel1
 
 | Interface | Description | VRF | IPv6 Address |
 | --------- | ----------- | --- | ------------ |
-| Loopback0 | EVPN_Overlay_Peering | default | 2001:db8:1::5/128 |
+| Loopback0 | EVPN_Overlay_Peering | default | - |
 | Loopback1 | VTEP_VXLAN_Tunnel_Source | default | - |
 
 
@@ -336,7 +330,6 @@ interface Loopback0
    description EVPN_Overlay_Peering
    no shutdown
    ip address 192.168.101.5/32
-   ipv6 address 2001:db8:1::5/128
 !
 interface Loopback1
    description VTEP_VXLAN_Tunnel_Source
@@ -362,8 +355,8 @@ interface Loopback1
 | --------- | --- | ---------- | ------------------ | ------------------------- | ---- | ------ | ------- |
 | Vlan10 |  VRF_A  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |  -  |
 | Vlan20 |  VRF_A  |  -  |  10.1.20.1/24  |  -  |  -  |  -  |  -  |
-| Vlan3009 |  VRF_A  |  -  |  -  |  -  |  -  |  -  |  -  |
-| Vlan4093 |  default  |  -  |  -  |  -  |  -  |  -  |  -  |
+| Vlan3009 |  VRF_A  |  10.255.251.8/31  |  -  |  -  |  -  |  -  |  -  |
+| Vlan4093 |  default  |  10.255.251.8/31  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.8/31  |  -  |  -  |  -  |  -  |  -  |
 
 ### VLAN Interfaces Device Configuration
@@ -387,13 +380,13 @@ interface Vlan3009
    no shutdown
    mtu 1500
    vrf VRF_A
-   ipv6 enable
+   ip address 10.255.251.8/31
 !
 interface Vlan4093
    description MLAG_PEER_L3_PEERING
    no shutdown
    mtu 1500
-   ipv6 enable
+   ip address 10.255.251.8/31
 !
 interface Vlan4094
    description MLAG_PEER
@@ -486,17 +479,9 @@ ip routing vrf VRF_A
 
 | VRF | Routing Enabled |
 | --- | --------------- |
-| default | True |
+| default | False |
 | default | false |
 | VRF_A | false |
-
-### IPv6 Routing Device Configuration
-
-```eos
-!
-ipv6 unicast-routing
-ip routing ipv6 interfaces
-```
 
 ## Static Routes
 
@@ -564,21 +549,16 @@ ip route 0.0.0.0/0 192.168.0.1
 
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- |
+| 10.255.251.9 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - |
 | 172.31.252.1 | 65000 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - |
 | 192.168.99.1 | 65000 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - |
 | 192.168.101.11 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - |
 | 192.168.101.12 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - |
 | 192.168.101.13 | 65100 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - |
-
-### BGP Neighbor Interfaces
-
-| Neighbor Interface | VRF | Peer Group | Remote AS | Peer Filter |
-| ------------------ | --- | ---------- | --------- | ----------- |
-| Ethernet3 | default | IPv4-UNDERLAY-PEERS | 65100 | - |
-| Ethernet4 | default | IPv4-UNDERLAY-PEERS | 65100 | - |
-| Ethernet5 | default | IPv4-UNDERLAY-PEERS | 65100 | - |
-| Vlan4093 | default | MLAG-IPv4-UNDERLAY-PEER | 65199 | - |
-| Vlan3009 | VRF_A | MLAG-IPv4-UNDERLAY-PEER | 65199 | - |
+| 192.168.103.24 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - |
+| 192.168.103.26 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - |
+| 192.168.103.28 | 65100 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - |
+| 10.255.251.9 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | VRF_A | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - |
 
 ### Router BGP EVPN Address Family
 
@@ -627,10 +607,8 @@ router bgp 65199
    neighbor MLAG-IPv4-UNDERLAY-PEER send-community
    neighbor MLAG-IPv4-UNDERLAY-PEER maximum-routes 12000
    neighbor MLAG-IPv4-UNDERLAY-PEER route-map RM-MLAG-PEER-IN in
-   neighbor interface Ethernet3 peer-group IPv4-UNDERLAY-PEERS remote-as 65100
-   neighbor interface Ethernet4 peer-group IPv4-UNDERLAY-PEERS remote-as 65100
-   neighbor interface Ethernet5 peer-group IPv4-UNDERLAY-PEERS remote-as 65100
-   neighbor interface Vlan4093 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65199
+   neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER
+   neighbor 10.255.251.9 description borderleaf2-DC1
    neighbor 172.31.252.1 peer group IPv4-UNDERLAY-PEERS
    neighbor 172.31.252.1 remote-as 65000
    neighbor 172.31.252.1 description DCI
@@ -646,6 +624,15 @@ router bgp 65199
    neighbor 192.168.101.13 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.101.13 remote-as 65100
    neighbor 192.168.101.13 description spine3-DC1
+   neighbor 192.168.103.24 peer group IPv4-UNDERLAY-PEERS
+   neighbor 192.168.103.24 remote-as 65100
+   neighbor 192.168.103.24 description spine1-DC1_Ethernet6
+   neighbor 192.168.103.26 peer group IPv4-UNDERLAY-PEERS
+   neighbor 192.168.103.26 remote-as 65100
+   neighbor 192.168.103.26 description spine2-DC1_Ethernet6
+   neighbor 192.168.103.28 peer group IPv4-UNDERLAY-PEERS
+   neighbor 192.168.103.28 remote-as 65100
+   neighbor 192.168.103.28 description spine3-DC1_Ethernet6
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan-aware-bundle VRF_A
@@ -659,12 +646,6 @@ router bgp 65199
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-PEERS activate
-      neighbor IPv4-UNDERLAY-PEERS next-hop address-family ipv6 originate
-      neighbor IPv4-UNDERLAY-PEERS activate
-      neighbor MLAG-IPv4-UNDERLAY-PEER next-hop address-family ipv6 originate
-      neighbor MLAG-IPv4-UNDERLAY-PEER activate
-   !
-   address-family ipv6
       neighbor IPv4-UNDERLAY-PEERS activate
       neighbor MLAG-IPv4-UNDERLAY-PEER activate
    !
@@ -673,7 +654,7 @@ router bgp 65199
       route-target import evpn 10:10
       route-target export evpn 10:10
       router-id 192.168.101.5
-      neighbor interface Vlan3009 peer-group MLAG-IPv4-UNDERLAY-PEER remote-as 65199
+      neighbor 10.255.251.9 peer group MLAG-IPv4-UNDERLAY-PEER
       redistribute connected
 ```
 
@@ -732,24 +713,6 @@ ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 20 permit 192.168.102.0/24 eq 32
 ```
 
-## IPv6 Prefix-lists
-
-### IPv6 Prefix-lists Summary
-
-#### PL-LOOPBACKS-EVPN-OVERLAY-V6
-
-| Sequence | Action |
-| -------- | ------ |
-| 10 | permit 2001:db8:1::/64 eq 128 |
-
-### IPv6 Prefix-lists Device Configuration
-
-```eos
-!
-ipv6 prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
-   seq 10 permit 2001:db8:1::/64 eq 128
-```
-
 ## Route-maps
 
 ### Route-maps Summary
@@ -759,7 +722,6 @@ ipv6 prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 | Sequence | Type | Match | Set | Sub-Route-Map | Continue |
 | -------- | ---- | ----- | --- | ------------- | -------- |
 | 10 | permit | ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY | - | - | - |
-| 30 | permit | ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6 | - | - | - |
 
 #### RM-MLAG-PEER-IN
 
@@ -773,9 +735,6 @@ ipv6 prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 !
 route-map RM-CONN-2-BGP permit 10
    match ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-!
-route-map RM-CONN-2-BGP permit 30
-   match ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 !
 route-map RM-MLAG-PEER-IN permit 10
    description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing

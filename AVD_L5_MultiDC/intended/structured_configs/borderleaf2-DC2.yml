@@ -27,49 +27,30 @@ router_bgp:
       ebgp_multihop: '3'
       send_community: all
       maximum_routes: 0
-  address_family_ipv6:
-    peer_groups:
-      MLAG-IPv4-UNDERLAY-PEER:
-        activate: true
-      IPv4-UNDERLAY-PEERS:
-        activate: true
   address_family_ipv4:
     peer_groups:
       MLAG-IPv4-UNDERLAY-PEER:
         activate: true
-        next_hop:
-          address_family_ipv6_originate: true
       IPv4-UNDERLAY-PEERS:
         activate: true
-        next_hop:
-          address_family_ipv6_originate: true
       EVPN-OVERLAY-PEERS:
         activate: false
-  neighbor_interfaces:
-    Vlan4093:
+  neighbors:
+    10.255.251.8:
       peer_group: MLAG-IPv4-UNDERLAY-PEER
-      remote_as: '65299'
       description: borderleaf1-DC2
-    Ethernet3:
+    192.168.203.30:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65200'
       description: spine1-DC2_Ethernet7
-    Ethernet4:
+    192.168.203.32:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65200'
       description: spine2-DC2_Ethernet7
-    Ethernet5:
+    192.168.203.34:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65200'
       description: spine3-DC2_Ethernet7
-  redistribute_routes:
-    connected:
-      route_map: RM-CONN-2-BGP
-  address_family_evpn:
-    peer_groups:
-      EVPN-OVERLAY-PEERS:
-        activate: true
-  neighbors:
     192.168.99.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: DCI
@@ -90,6 +71,13 @@ router_bgp:
       remote_as: '65000'
       description: DCI
       peer_group: IPv4-UNDERLAY-PEERS
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
   vrfs:
     VRF_A:
       router_id: 192.168.201.6
@@ -101,11 +89,9 @@ router_bgp:
         export:
           evpn:
           - '10:10'
-      neighbor_interfaces:
-        Vlan3009:
+      neighbors:
+        10.255.251.8:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
-          remote_as: '65299'
-          description: borderleaf1-DC2
       redistribute_routes:
       - connected
   vlan_aware_bundles:
@@ -123,8 +109,6 @@ static_routes:
   gateway: 192.168.0.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
-ipv6_unicast_routing: true
-ip_routing_ipv6_interfaces: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -180,7 +164,7 @@ vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
     shutdown: false
-    ipv6_enable: true
+    ip_address: 10.255.251.9/31
     mtu: 1500
   Vlan4094:
     description: MLAG_PEER
@@ -206,7 +190,7 @@ vlan_interfaces:
     shutdown: false
     description: 'MLAG_PEER_L3_iBGP: vrf VRF_A'
     vrf: VRF_A
-    ipv6_enable: true
+    ip_address: 10.255.251.9/31
     mtu: 1500
 port_channel_interfaces:
   Port-Channel1:
@@ -247,7 +231,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ipv6_enable: true
+    ip_address: 192.168.203.31/31
   Ethernet4:
     peer: spine2-DC2
     peer_interface: Ethernet7
@@ -256,7 +240,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ipv6_enable: true
+    ip_address: 192.168.203.33/31
   Ethernet5:
     peer: spine3-DC2
     peer_interface: Ethernet7
@@ -265,7 +249,7 @@ ethernet_interfaces:
     mtu: 1500
     type: routed
     shutdown: false
-    ipv6_enable: true
+    ip_address: 192.168.203.35/31
   Ethernet12:
     peer: DCI
     peer_interface: Ethernet4
@@ -296,16 +280,11 @@ route_maps:
         type: permit
         match:
         - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
-      30:
-        type: permit
-        match:
-        - ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
     shutdown: false
     ip_address: 192.168.201.6/32
-    ipv6_address: 2001:db8:1::6/128
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
     shutdown: false
@@ -317,11 +296,6 @@ prefix_lists:
         action: permit 192.168.201.0/24 eq 32
       20:
         action: permit 192.168.202.0/24 eq 32
-ipv6_prefix_lists:
-  PL-LOOPBACKS-EVPN-OVERLAY-V6:
-    sequence_numbers:
-      10:
-        action: permit 2001:db8:1::/64 eq 128
 router_bfd:
   multihop:
     interval: 300
