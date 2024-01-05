@@ -1,0 +1,1774 @@
+hostname: spine3
+router_bgp:
+  as: '65001'
+  router_id: 192.168.101.13
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  bgp:
+    default:
+      ipv4_unicast: false
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    maximum_routes: 12000
+    send_community: all
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+    ebgp_multihop: 3
+    next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  redistribute_routes:
+  - source_protocol: connected
+    route_map: RM-CONN-2-BGP
+  neighbors:
+  - ip_address: 192.168.0.5
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65100'
+    description: leaf1_Ethernet5
+  - ip_address: 192.168.0.17
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65100'
+    description: leaf2_Ethernet5
+  - ip_address: 192.168.0.29
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65299'
+    description: leaf3_Ethernet5
+  - ip_address: 192.168.0.41
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65299'
+    description: leaf4_Ethernet5
+  - ip_address: 192.168.0.53
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65104'
+    description: leaf5_Ethernet5
+  - ip_address: 192.168.0.65
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65105'
+    description: leaf6_Ethernet5
+  - ip_address: 192.168.0.77
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65106'
+    description: leaf7_Ethernet5
+  - ip_address: 192.168.0.89
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65107'
+    description: leaf8_Ethernet5
+  - ip_address: 192.168.0.101
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65108'
+    description: leaf9_Ethernet5
+  - ip_address: 192.168.0.113
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65109'
+    description: leaf10_Ethernet5
+  - ip_address: 192.168.0.125
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65110'
+    description: leaf11_Ethernet5
+  - ip_address: 192.168.0.137
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65111'
+    description: leaf12_Ethernet5
+  - ip_address: 192.168.0.149
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65112'
+    description: leaf13_Ethernet5
+  - ip_address: 192.168.0.161
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65113'
+    description: leaf14_Ethernet5
+  - ip_address: 192.168.0.173
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65114'
+    description: leaf15_Ethernet5
+  - ip_address: 192.168.0.185
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65115'
+    description: leaf16_Ethernet5
+  - ip_address: 192.168.0.197
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65116'
+    description: leaf17_Ethernet5
+  - ip_address: 192.168.0.209
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65117'
+    description: leaf18_Ethernet5
+  - ip_address: 192.168.0.221
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65118'
+    description: leaf19_Ethernet5
+  - ip_address: 192.168.0.233
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65119'
+    description: leaf20_Ethernet5
+  - ip_address: 192.168.0.245
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65120'
+    description: leaf21_Ethernet5
+  - ip_address: 192.168.1.1
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65121'
+    description: leaf22_Ethernet5
+  - ip_address: 192.168.1.13
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65122'
+    description: leaf23_Ethernet5
+  - ip_address: 192.168.1.25
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65123'
+    description: leaf24_Ethernet5
+  - ip_address: 192.168.1.37
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65124'
+    description: leaf25_Ethernet5
+  - ip_address: 192.168.1.49
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65125'
+    description: leaf26_Ethernet5
+  - ip_address: 192.168.1.61
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65126'
+    description: leaf27_Ethernet5
+  - ip_address: 192.168.1.73
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65127'
+    description: leaf28_Ethernet5
+  - ip_address: 192.168.1.85
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65128'
+    description: leaf29_Ethernet5
+  - ip_address: 192.168.1.97
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65129'
+    description: leaf30_Ethernet5
+  - ip_address: 192.168.1.109
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65130'
+    description: leaf31_Ethernet5
+  - ip_address: 192.168.1.121
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65131'
+    description: leaf32_Ethernet5
+  - ip_address: 192.168.1.133
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65132'
+    description: leaf33_Ethernet5
+  - ip_address: 192.168.1.145
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65133'
+    description: leaf34_Ethernet5
+  - ip_address: 192.168.1.157
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65134'
+    description: leaf35_Ethernet5
+  - ip_address: 192.168.1.169
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65135'
+    description: leaf36_Ethernet5
+  - ip_address: 192.168.1.181
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65136'
+    description: leaf37_Ethernet5
+  - ip_address: 192.168.1.193
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65137'
+    description: leaf38_Ethernet5
+  - ip_address: 192.168.1.205
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65138'
+    description: leaf39_Ethernet5
+  - ip_address: 192.168.1.217
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65139'
+    description: leaf40_Ethernet5
+  - ip_address: 192.168.1.229
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65140'
+    description: leaf41_Ethernet5
+  - ip_address: 192.168.1.241
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65141'
+    description: leaf42_Ethernet5
+  - ip_address: 192.168.1.253
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65142'
+    description: leaf43_Ethernet5
+  - ip_address: 192.168.2.9
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65143'
+    description: leaf44_Ethernet5
+  - ip_address: 192.168.2.21
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65144'
+    description: leaf45_Ethernet5
+  - ip_address: 192.168.2.33
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65145'
+    description: leaf46_Ethernet5
+  - ip_address: 192.168.2.45
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65146'
+    description: leaf47_Ethernet5
+  - ip_address: 192.168.2.57
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65147'
+    description: leaf48_Ethernet5
+  - ip_address: 192.168.2.69
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65148'
+    description: leaf49_Ethernet5
+  - ip_address: 192.168.2.81
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65149'
+    description: leaf50_Ethernet5
+  - ip_address: 192.168.2.93
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65150'
+    description: leaf51_Ethernet5
+  - ip_address: 192.168.2.105
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65151'
+    description: leaf52_Ethernet5
+  - ip_address: 192.168.2.117
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65152'
+    description: leaf53_Ethernet5
+  - ip_address: 192.168.2.129
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65153'
+    description: leaf54_Ethernet5
+  - ip_address: 192.168.2.141
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65154'
+    description: leaf55_Ethernet5
+  - ip_address: 192.168.2.153
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65155'
+    description: leaf56_Ethernet5
+  - ip_address: 192.168.2.165
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65156'
+    description: leaf57_Ethernet5
+  - ip_address: 192.168.2.177
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65157'
+    description: leaf58_Ethernet5
+  - ip_address: 192.168.2.189
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65158'
+    description: leaf59_Ethernet5
+  - ip_address: 192.168.2.201
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65159'
+    description: leaf60_Ethernet5
+  - ip_address: 192.168.2.213
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65160'
+    description: leaf61_Ethernet5
+  - ip_address: 192.168.2.225
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65161'
+    description: leaf62_Ethernet5
+  - ip_address: 192.168.2.237
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65162'
+    description: leaf63_Ethernet5
+  - ip_address: 192.168.2.249
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65163'
+    description: leaf64_Ethernet5
+  - ip_address: 192.168.3.5
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65164'
+    description: leaf65_Ethernet5
+  - ip_address: 192.168.3.17
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65165'
+    description: leaf66_Ethernet5
+  - ip_address: 192.168.3.29
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65166'
+    description: leaf67_Ethernet5
+  - ip_address: 192.168.3.41
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65167'
+    description: leaf68_Ethernet5
+  - ip_address: 192.168.3.53
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65168'
+    description: leaf69_Ethernet5
+  - ip_address: 192.168.3.65
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65169'
+    description: leaf70_Ethernet5
+  - ip_address: 192.168.3.77
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65170'
+    description: leaf71_Ethernet5
+  - ip_address: 192.168.3.89
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65171'
+    description: leaf72_Ethernet5
+  - ip_address: 192.168.3.101
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65172'
+    description: leaf73_Ethernet5
+  - ip_address: 192.168.3.113
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65173'
+    description: leaf74_Ethernet5
+  - ip_address: 192.168.3.125
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65174'
+    description: leaf75_Ethernet5
+  - ip_address: 192.168.3.137
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65175'
+    description: leaf76_Ethernet5
+  - ip_address: 192.168.3.149
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65176'
+    description: leaf77_Ethernet5
+  - ip_address: 192.168.3.161
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65177'
+    description: leaf78_Ethernet5
+  - ip_address: 192.168.3.173
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65178'
+    description: leaf79_Ethernet5
+  - ip_address: 192.168.3.185
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65179'
+    description: leaf80_Ethernet5
+  - ip_address: 192.168.3.197
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65180'
+    description: leaf81_Ethernet5
+  - ip_address: 192.168.3.209
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65181'
+    description: leaf82_Ethernet5
+  - ip_address: 192.168.3.221
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65182'
+    description: leaf83_Ethernet5
+  - ip_address: 192.168.3.233
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65183'
+    description: leaf84_Ethernet5
+  - ip_address: 192.168.3.245
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65184'
+    description: leaf85_Ethernet5
+  - ip_address: 192.168.4.1
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65185'
+    description: leaf86_Ethernet5
+  - ip_address: 192.168.4.13
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65186'
+    description: leaf87_Ethernet5
+  - ip_address: 192.168.4.25
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65187'
+    description: leaf88_Ethernet5
+  - ip_address: 192.168.4.37
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65188'
+    description: leaf89_Ethernet5
+  - ip_address: 192.168.4.49
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65189'
+    description: leaf90_Ethernet5
+  - ip_address: 192.168.4.61
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65190'
+    description: leaf91_Ethernet5
+  - ip_address: 192.168.4.73
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65191'
+    description: leaf92_Ethernet5
+  - ip_address: 192.168.4.85
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65192'
+    description: leaf93_Ethernet5
+  - ip_address: 192.168.4.97
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65193'
+    description: leaf94_Ethernet5
+  - ip_address: 192.168.4.109
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65194'
+    description: leaf95_Ethernet5
+  - ip_address: 192.168.4.121
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65195'
+    description: leaf96_Ethernet5
+  - ip_address: 192.168.4.133
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65196'
+    description: leaf97_Ethernet5
+  - ip_address: 192.168.4.145
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65197'
+    description: leaf98_Ethernet5
+  - ip_address: 192.168.4.157
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65198'
+    description: leaf99_Ethernet5
+  - ip_address: 192.168.101.1
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf1
+    remote_as: '65100'
+  - ip_address: 192.168.101.2
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf2
+    remote_as: '65100'
+  - ip_address: 192.168.101.3
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf3
+    remote_as: '65299'
+  - ip_address: 192.168.101.4
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf4
+    remote_as: '65299'
+  - ip_address: 192.168.101.5
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf5
+    remote_as: '65104'
+  - ip_address: 192.168.101.6
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf6
+    remote_as: '65105'
+  - ip_address: 192.168.101.7
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf7
+    remote_as: '65106'
+  - ip_address: 192.168.101.8
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf8
+    remote_as: '65107'
+  - ip_address: 192.168.101.9
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf9
+    remote_as: '65108'
+  - ip_address: 192.168.101.10
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf10
+    remote_as: '65109'
+  - ip_address: 192.168.101.11
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf11
+    remote_as: '65110'
+  - ip_address: 192.168.101.12
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf12
+    remote_as: '65111'
+  - ip_address: 192.168.101.13
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf13
+    remote_as: '65112'
+  - ip_address: 192.168.101.14
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf14
+    remote_as: '65113'
+  - ip_address: 192.168.101.15
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf15
+    remote_as: '65114'
+  - ip_address: 192.168.101.16
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf16
+    remote_as: '65115'
+  - ip_address: 192.168.101.17
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf17
+    remote_as: '65116'
+  - ip_address: 192.168.101.18
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf18
+    remote_as: '65117'
+  - ip_address: 192.168.101.19
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf19
+    remote_as: '65118'
+  - ip_address: 192.168.101.20
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf20
+    remote_as: '65119'
+  - ip_address: 192.168.101.21
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf21
+    remote_as: '65120'
+  - ip_address: 192.168.101.22
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf22
+    remote_as: '65121'
+  - ip_address: 192.168.101.23
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf23
+    remote_as: '65122'
+  - ip_address: 192.168.101.24
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf24
+    remote_as: '65123'
+  - ip_address: 192.168.101.25
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf25
+    remote_as: '65124'
+  - ip_address: 192.168.101.26
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf26
+    remote_as: '65125'
+  - ip_address: 192.168.101.27
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf27
+    remote_as: '65126'
+  - ip_address: 192.168.101.28
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf28
+    remote_as: '65127'
+  - ip_address: 192.168.101.29
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf29
+    remote_as: '65128'
+  - ip_address: 192.168.101.30
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf30
+    remote_as: '65129'
+  - ip_address: 192.168.101.31
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf31
+    remote_as: '65130'
+  - ip_address: 192.168.101.32
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf32
+    remote_as: '65131'
+  - ip_address: 192.168.101.33
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf33
+    remote_as: '65132'
+  - ip_address: 192.168.101.34
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf34
+    remote_as: '65133'
+  - ip_address: 192.168.101.35
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf35
+    remote_as: '65134'
+  - ip_address: 192.168.101.36
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf36
+    remote_as: '65135'
+  - ip_address: 192.168.101.37
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf37
+    remote_as: '65136'
+  - ip_address: 192.168.101.38
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf38
+    remote_as: '65137'
+  - ip_address: 192.168.101.39
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf39
+    remote_as: '65138'
+  - ip_address: 192.168.101.40
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf40
+    remote_as: '65139'
+  - ip_address: 192.168.101.41
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf41
+    remote_as: '65140'
+  - ip_address: 192.168.101.42
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf42
+    remote_as: '65141'
+  - ip_address: 192.168.101.43
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf43
+    remote_as: '65142'
+  - ip_address: 192.168.101.44
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf44
+    remote_as: '65143'
+  - ip_address: 192.168.101.45
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf45
+    remote_as: '65144'
+  - ip_address: 192.168.101.46
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf46
+    remote_as: '65145'
+  - ip_address: 192.168.101.47
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf47
+    remote_as: '65146'
+  - ip_address: 192.168.101.48
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf48
+    remote_as: '65147'
+  - ip_address: 192.168.101.49
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf49
+    remote_as: '65148'
+  - ip_address: 192.168.101.50
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf50
+    remote_as: '65149'
+  - ip_address: 192.168.101.51
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf51
+    remote_as: '65150'
+  - ip_address: 192.168.101.52
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf52
+    remote_as: '65151'
+  - ip_address: 192.168.101.53
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf53
+    remote_as: '65152'
+  - ip_address: 192.168.101.54
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf54
+    remote_as: '65153'
+  - ip_address: 192.168.101.55
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf55
+    remote_as: '65154'
+  - ip_address: 192.168.101.56
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf56
+    remote_as: '65155'
+  - ip_address: 192.168.101.57
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf57
+    remote_as: '65156'
+  - ip_address: 192.168.101.58
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf58
+    remote_as: '65157'
+  - ip_address: 192.168.101.59
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf59
+    remote_as: '65158'
+  - ip_address: 192.168.101.60
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf60
+    remote_as: '65159'
+  - ip_address: 192.168.101.61
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf61
+    remote_as: '65160'
+  - ip_address: 192.168.101.62
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf62
+    remote_as: '65161'
+  - ip_address: 192.168.101.63
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf63
+    remote_as: '65162'
+  - ip_address: 192.168.101.64
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf64
+    remote_as: '65163'
+  - ip_address: 192.168.101.65
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf65
+    remote_as: '65164'
+  - ip_address: 192.168.101.66
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf66
+    remote_as: '65165'
+  - ip_address: 192.168.101.67
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf67
+    remote_as: '65166'
+  - ip_address: 192.168.101.68
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf68
+    remote_as: '65167'
+  - ip_address: 192.168.101.69
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf69
+    remote_as: '65168'
+  - ip_address: 192.168.101.70
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf70
+    remote_as: '65169'
+  - ip_address: 192.168.101.71
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf71
+    remote_as: '65170'
+  - ip_address: 192.168.101.72
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf72
+    remote_as: '65171'
+  - ip_address: 192.168.101.73
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf73
+    remote_as: '65172'
+  - ip_address: 192.168.101.74
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf74
+    remote_as: '65173'
+  - ip_address: 192.168.101.75
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf75
+    remote_as: '65174'
+  - ip_address: 192.168.101.76
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf76
+    remote_as: '65175'
+  - ip_address: 192.168.101.77
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf77
+    remote_as: '65176'
+  - ip_address: 192.168.101.78
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf78
+    remote_as: '65177'
+  - ip_address: 192.168.101.79
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf79
+    remote_as: '65178'
+  - ip_address: 192.168.101.80
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf80
+    remote_as: '65179'
+  - ip_address: 192.168.101.81
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf81
+    remote_as: '65180'
+  - ip_address: 192.168.101.82
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf82
+    remote_as: '65181'
+  - ip_address: 192.168.101.83
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf83
+    remote_as: '65182'
+  - ip_address: 192.168.101.84
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf84
+    remote_as: '65183'
+  - ip_address: 192.168.101.85
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf85
+    remote_as: '65184'
+  - ip_address: 192.168.101.86
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf86
+    remote_as: '65185'
+  - ip_address: 192.168.101.87
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf87
+    remote_as: '65186'
+  - ip_address: 192.168.101.88
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf88
+    remote_as: '65187'
+  - ip_address: 192.168.101.89
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf89
+    remote_as: '65188'
+  - ip_address: 192.168.101.90
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf90
+    remote_as: '65189'
+  - ip_address: 192.168.101.91
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf91
+    remote_as: '65190'
+  - ip_address: 192.168.101.92
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf92
+    remote_as: '65191'
+  - ip_address: 192.168.101.93
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf93
+    remote_as: '65192'
+  - ip_address: 192.168.101.94
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf94
+    remote_as: '65193'
+  - ip_address: 192.168.101.95
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf95
+    remote_as: '65194'
+  - ip_address: 192.168.101.96
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf96
+    remote_as: '65195'
+  - ip_address: 192.168.101.97
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf97
+    remote_as: '65196'
+  - ip_address: 192.168.101.98
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf98
+    remote_as: '65197'
+  - ip_address: 192.168.101.99
+    peer_group: EVPN-OVERLAY-PEERS
+    description: leaf99
+    remote_as: '65198'
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+spanning_tree:
+  mode: none
+vrfs:
+- name: MGMT
+  ip_routing: false
+management_interfaces:
+- name: Management0
+  description: oob_management
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.0.13/24
+  gateway: 192.168.0.1
+  type: oob
+management_api_http:
+  enable_vrfs:
+  - name: MGMT
+  enable_https: true
+ethernet_interfaces:
+- name: Ethernet3
+  peer: leaf1
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF1_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.4/31
+- name: Ethernet4
+  peer: leaf2
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF2_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.16/31
+- name: Ethernet5
+  peer: leaf3
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF3_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.28/31
+- name: Ethernet6
+  peer: leaf4
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF4_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.40/31
+- name: Ethernet7
+  peer: leaf5
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF5_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.52/31
+- name: Ethernet8
+  peer: leaf6
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF6_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.64/31
+- name: Ethernet9
+  peer: leaf7
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF7_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.76/31
+- name: Ethernet10
+  peer: leaf8
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF8_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.88/31
+- name: Ethernet11
+  peer: leaf9
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF9_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.100/31
+- name: Ethernet12
+  peer: leaf10
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF10_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.112/31
+- name: Ethernet13
+  peer: leaf11
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF11_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.124/31
+- name: Ethernet14
+  peer: leaf12
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF12_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.136/31
+- name: Ethernet15
+  peer: leaf13
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF13_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.148/31
+- name: Ethernet16
+  peer: leaf14
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF14_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.160/31
+- name: Ethernet17
+  peer: leaf15
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF15_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.172/31
+- name: Ethernet18
+  peer: leaf16
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF16_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.184/31
+- name: Ethernet19
+  peer: leaf17
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF17_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.196/31
+- name: Ethernet20
+  peer: leaf18
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF18_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.208/31
+- name: Ethernet21
+  peer: leaf19
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF19_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.220/31
+- name: Ethernet22
+  peer: leaf20
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF20_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.232/31
+- name: Ethernet23
+  peer: leaf21
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF21_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.0.244/31
+- name: Ethernet24
+  peer: leaf22
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF22_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.0/31
+- name: Ethernet25
+  peer: leaf23
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF23_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.12/31
+- name: Ethernet26
+  peer: leaf24
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF24_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.24/31
+- name: Ethernet27
+  peer: leaf25
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF25_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.36/31
+- name: Ethernet28
+  peer: leaf26
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF26_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.48/31
+- name: Ethernet29
+  peer: leaf27
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF27_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.60/31
+- name: Ethernet30
+  peer: leaf28
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF28_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.72/31
+- name: Ethernet31
+  peer: leaf29
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF29_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.84/31
+- name: Ethernet32
+  peer: leaf30
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF30_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.96/31
+- name: Ethernet33
+  peer: leaf31
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF31_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.108/31
+- name: Ethernet34
+  peer: leaf32
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF32_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.120/31
+- name: Ethernet35
+  peer: leaf33
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF33_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.132/31
+- name: Ethernet36
+  peer: leaf34
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF34_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.144/31
+- name: Ethernet37
+  peer: leaf35
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF35_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.156/31
+- name: Ethernet38
+  peer: leaf36
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF36_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.168/31
+- name: Ethernet39
+  peer: leaf37
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF37_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.180/31
+- name: Ethernet40
+  peer: leaf38
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF38_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.192/31
+- name: Ethernet41
+  peer: leaf39
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF39_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.204/31
+- name: Ethernet42
+  peer: leaf40
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF40_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.216/31
+- name: Ethernet43
+  peer: leaf41
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF41_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.228/31
+- name: Ethernet44
+  peer: leaf42
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF42_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.240/31
+- name: Ethernet45
+  peer: leaf43
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF43_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.1.252/31
+- name: Ethernet46
+  peer: leaf44
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF44_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.8/31
+- name: Ethernet47
+  peer: leaf45
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF45_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.20/31
+- name: Ethernet48
+  peer: leaf46
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF46_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.32/31
+- name: Ethernet49
+  peer: leaf47
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF47_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.44/31
+- name: Ethernet50
+  peer: leaf48
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF48_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.56/31
+- name: Ethernet51
+  peer: leaf49
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF49_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.68/31
+- name: Ethernet52
+  peer: leaf50
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF50_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.80/31
+- name: Ethernet53
+  peer: leaf51
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF51_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.92/31
+- name: Ethernet54
+  peer: leaf52
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF52_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.104/31
+- name: Ethernet55
+  peer: leaf53
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF53_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.116/31
+- name: Ethernet56
+  peer: leaf54
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF54_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.128/31
+- name: Ethernet57
+  peer: leaf55
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF55_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.140/31
+- name: Ethernet58
+  peer: leaf56
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF56_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.152/31
+- name: Ethernet59
+  peer: leaf57
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF57_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.164/31
+- name: Ethernet60
+  peer: leaf58
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF58_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.176/31
+- name: Ethernet61
+  peer: leaf59
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF59_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.188/31
+- name: Ethernet62
+  peer: leaf60
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF60_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.200/31
+- name: Ethernet63
+  peer: leaf61
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF61_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.212/31
+- name: Ethernet64
+  peer: leaf62
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF62_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.224/31
+- name: Ethernet65
+  peer: leaf63
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF63_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.236/31
+- name: Ethernet66
+  peer: leaf64
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF64_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.2.248/31
+- name: Ethernet67
+  peer: leaf65
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF65_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.4/31
+- name: Ethernet68
+  peer: leaf66
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF66_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.16/31
+- name: Ethernet69
+  peer: leaf67
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF67_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.28/31
+- name: Ethernet70
+  peer: leaf68
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF68_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.40/31
+- name: Ethernet71
+  peer: leaf69
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF69_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.52/31
+- name: Ethernet72
+  peer: leaf70
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF70_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.64/31
+- name: Ethernet73
+  peer: leaf71
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF71_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.76/31
+- name: Ethernet74
+  peer: leaf72
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF72_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.88/31
+- name: Ethernet75
+  peer: leaf73
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF73_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.100/31
+- name: Ethernet76
+  peer: leaf74
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF74_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.112/31
+- name: Ethernet77
+  peer: leaf75
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF75_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.124/31
+- name: Ethernet78
+  peer: leaf76
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF76_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.136/31
+- name: Ethernet79
+  peer: leaf77
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF77_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.148/31
+- name: Ethernet80
+  peer: leaf78
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF78_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.160/31
+- name: Ethernet81
+  peer: leaf79
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF79_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.172/31
+- name: Ethernet82
+  peer: leaf80
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF80_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.184/31
+- name: Ethernet83
+  peer: leaf81
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF81_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.196/31
+- name: Ethernet84
+  peer: leaf82
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF82_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.208/31
+- name: Ethernet85
+  peer: leaf83
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF83_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.220/31
+- name: Ethernet86
+  peer: leaf84
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF84_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.232/31
+- name: Ethernet87
+  peer: leaf85
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF85_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.3.244/31
+- name: Ethernet88
+  peer: leaf86
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF86_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.0/31
+- name: Ethernet89
+  peer: leaf87
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF87_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.12/31
+- name: Ethernet90
+  peer: leaf88
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF88_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.24/31
+- name: Ethernet91
+  peer: leaf89
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF89_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.36/31
+- name: Ethernet92
+  peer: leaf90
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF90_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.48/31
+- name: Ethernet93
+  peer: leaf91
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF91_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.60/31
+- name: Ethernet94
+  peer: leaf92
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF92_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.72/31
+- name: Ethernet95
+  peer: leaf93
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF93_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.84/31
+- name: Ethernet96
+  peer: leaf94
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF94_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.96/31
+- name: Ethernet97
+  peer: leaf95
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF95_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.108/31
+- name: Ethernet98
+  peer: leaf96
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF96_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.120/31
+- name: Ethernet99
+  peer: leaf97
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF97_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.132/31
+- name: Ethernet100
+  peer: leaf98
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF98_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.144/31
+- name: Ethernet101
+  peer: leaf99
+  peer_interface: Ethernet5
+  peer_type: l3leaf
+  description: P2P_LINK_TO_LEAF99_Ethernet5
+  shutdown: false
+  mtu: 1500
+  type: routed
+  ip_address: 192.168.4.156/31
+loopback_interfaces:
+- name: Loopback0
+  description: EVPN_Overlay_Peering
+  shutdown: false
+  ip_address: 192.168.101.13/32
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.101.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3

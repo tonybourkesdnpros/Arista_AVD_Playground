@@ -1,0 +1,496 @@
+---
+
+fabric_name: FABRIC
+
+# Various fabric settings
+
+# Enable vlan aware bundles
+evpn_vlan_aware_bundles: false
+
+
+# Spine Switches
+spine:
+  defaults:
+#    platform: vEOS-LAB # 
+    bgp_as: 65001
+    loopback_ipv4_pool: 192.168.101.0/24
+    bgp_defaults:
+      - 'no bgp default ipv4-unicast'
+      - 'distance bgp 20 200 200'
+    mlag: false
+  nodes:
+    - name: spine1
+      id: 11
+      mgmt_ip: 192.168.0.11/24
+    - name: spine2
+      id: 12
+      mgmt_ip: 192.168.0.12/24
+    - name: spine3
+      id: 13
+      mgmt_ip: 192.168.0.13/24
+    - name: spine4
+      id: 11
+      mgmt_ip: 192.168.0.14/24
+    - name: spine5
+      id: 12
+      mgmt_ip: 192.168.0.15/24
+    - name: spine6
+      id: 13
+      mgmt_ip: 192.168.0.16/24
+# Leaf switches. Most leafs will be l3leaf, not l2leaf.
+l3leaf:
+  defaults:
+    bgp_as: 65100-65199 # Gives a range which will be auto-assigned
+#    platform: vEOS-LAB
+    loopback_ipv4_pool: 192.168.101.0/24 # This is loopback0 (underlay)
+    vtep_loopback_ipv4_pool: 192.168.102.0/24 # This is loopback1 (VTEP)
+    uplink_interfaces: [Ethernet3, Ethernet4, Ethernet5, Ethernet6, Ethernet7, Ethernet8] # Leaf uplinks
+    uplink_switches: [spine1, spine2, spine3, spine4, spine5, spine6] # Where the leaf uplinks go
+    uplink_ipv4_pool: 192.168.0.0/20 # For the p2p interfaces to chopped up into /31s
+    mlag_interfaces: [Ethernet1, Ethernet2] # MLAG peer link
+    mlag_peer_ipv4_pool: 10.255.252.0/24 # MLAG peer IPs
+    mlag_peer_l3_ipv4_pool: 10.255.251.0/24 # iBGP peering between MLAG peers
+    virtual_router_mac_address: 00:1c:73:00:00:99 # The vMAC for the anycast gateways
+    bgp_defaults:
+      - 'no bgp default ipv4-unicast'
+      - 'distance bgp 20 200 200'
+      - 'graceful-restart restart-time 300'
+      - 'graceful-restart'
+    spanning_tree_mode: mstp # Spanning Tree is still enabled even in EVPN setups
+    spanning_tree_priority: 16384 
+    mlag: true # By default, use MLAG
+  node_groups: 
+    - group: mlag1
+    # bgp_as is configured automatically from the range, but can be overriden
+      nodes:
+        - name: leaf1
+          id: 1
+          mgmt_ip: 192.168.0.21/24
+          uplink_switch_interfaces: [Ethernet3, Ethernet3, Ethernet3, Ethernet3, Ethernet3, Ethernet3]
+        - name: leaf2
+          id: 2
+          mgmt_ip: 192.168.0.22/24
+          uplink_switch_interfaces: [Ethernet4, Ethernet4, Ethernet4, Ethernet4, Ethernet4, Ethernet4]
+    - group: mlag2
+      bgp_as: 65299 # Overriden automatic allocation for host4/R1 peering
+      nodes:
+        - name: leaf3
+          id: 3
+          mgmt_ip: 192.168.0.23/24
+          uplink_switch_interfaces: [Ethernet5, Ethernet5, Ethernet5, Ethernet5, Ethernet5, Ethernet5]
+        - name: leaf4
+          id: 4
+          mgmt_ip: 192.168.0.24/24
+          uplink_switch_interfaces: [Ethernet6, Ethernet6, Ethernet6, Ethernet6, Ethernet6, Ethernet6]
+  nodes:
+    - name: leaf5
+      id: 5
+      mgmt_ip: 192.168.0.25/24
+      uplink_switch_interfaces: [Ethernet7, Ethernet7, Ethernet7, Ethernet7, Ethernet7, Ethernet7]
+    - name: leaf6
+      id: 6
+      mgmt_ip: 192.168.0.106
+      uplink_switch_interfaces: [Ethernet8, Ethernet8, Ethernet8, Ethernet8, Ethernet8, Ethernet8]
+    - name: leaf7
+      id: 7
+      mgmt_ip: 192.168.0.107
+      uplink_switch_interfaces: [Ethernet9, Ethernet9, Ethernet9, Ethernet9, Ethernet9, Ethernet9]
+    - name: leaf8
+      id: 8
+      mgmt_ip: 192.168.0.108
+      uplink_switch_interfaces: [Ethernet10, Ethernet10, Ethernet10, Ethernet10, Ethernet10, Ethernet10]
+    - name: leaf9
+      id: 9
+      mgmt_ip: 192.168.0.109
+      uplink_switch_interfaces: [Ethernet11, Ethernet11, Ethernet11, Ethernet11, Ethernet11, Ethernet11]
+    - name: leaf10
+      id: 10
+      mgmt_ip: 192.168.0.110
+      uplink_switch_interfaces: [Ethernet12, Ethernet12, Ethernet12, Ethernet12, Ethernet12, Ethernet12]
+    - name: leaf11
+      id: 11
+      mgmt_ip: 192.168.0.111
+      uplink_switch_interfaces: [Ethernet13, Ethernet13, Ethernet13, Ethernet13, Ethernet13, Ethernet13]
+    - name: leaf12
+      id: 12
+      mgmt_ip: 192.168.0.112
+      uplink_switch_interfaces: [Ethernet14, Ethernet14, Ethernet14, Ethernet14, Ethernet14, Ethernet14]
+    - name: leaf13
+      id: 13
+      mgmt_ip: 192.168.0.113
+      uplink_switch_interfaces: [Ethernet15, Ethernet15, Ethernet15, Ethernet15, Ethernet15, Ethernet15]
+    - name: leaf14
+      id: 14
+      mgmt_ip: 192.168.0.114
+      uplink_switch_interfaces: [Ethernet16, Ethernet16, Ethernet16, Ethernet16, Ethernet16, Ethernet16]
+    - name: leaf15
+      id: 15
+      mgmt_ip: 192.168.0.115
+      uplink_switch_interfaces: [Ethernet17, Ethernet17, Ethernet17, Ethernet17, Ethernet17, Ethernet17]
+    - name: leaf16
+      id: 16
+      mgmt_ip: 192.168.0.116
+      uplink_switch_interfaces: [Ethernet18, Ethernet18, Ethernet18, Ethernet18, Ethernet18, Ethernet18]
+    - name: leaf17
+      id: 17
+      mgmt_ip: 192.168.0.117
+      uplink_switch_interfaces: [Ethernet19, Ethernet19, Ethernet19, Ethernet19, Ethernet19, Ethernet19]
+    - name: leaf18
+      id: 18
+      mgmt_ip: 192.168.0.118
+      uplink_switch_interfaces: [Ethernet20, Ethernet20, Ethernet20, Ethernet20, Ethernet20, Ethernet20]
+    - name: leaf19
+      id: 19
+      mgmt_ip: 192.168.0.119
+      uplink_switch_interfaces: [Ethernet21, Ethernet21, Ethernet21, Ethernet21, Ethernet21, Ethernet21]
+    - name: leaf20
+      id: 20
+      mgmt_ip: 192.168.0.120
+      uplink_switch_interfaces: [Ethernet22, Ethernet22, Ethernet22, Ethernet22, Ethernet22, Ethernet22]
+    - name: leaf21
+      id: 21
+      mgmt_ip: 192.168.0.121
+      uplink_switch_interfaces: [Ethernet23, Ethernet23, Ethernet23, Ethernet23, Ethernet23, Ethernet23]
+    - name: leaf22
+      id: 22
+      mgmt_ip: 192.168.0.122
+      uplink_switch_interfaces: [Ethernet24, Ethernet24, Ethernet24, Ethernet24, Ethernet24, Ethernet24]
+    - name: leaf23
+      id: 23
+      mgmt_ip: 192.168.0.123
+      uplink_switch_interfaces: [Ethernet25, Ethernet25, Ethernet25, Ethernet25, Ethernet25, Ethernet25]
+    - name: leaf24
+      id: 24
+      mgmt_ip: 192.168.0.124
+      uplink_switch_interfaces: [Ethernet26, Ethernet26, Ethernet26, Ethernet26, Ethernet26, Ethernet26]
+    - name: leaf25
+      id: 25
+      mgmt_ip: 192.168.0.125
+      uplink_switch_interfaces: [Ethernet27, Ethernet27, Ethernet27, Ethernet27, Ethernet27, Ethernet27]
+    - name: leaf26
+      id: 26
+      mgmt_ip: 192.168.0.126
+      uplink_switch_interfaces: [Ethernet28, Ethernet28, Ethernet28, Ethernet28, Ethernet28, Ethernet28]
+    - name: leaf27
+      id: 27
+      mgmt_ip: 192.168.0.127
+      uplink_switch_interfaces: [Ethernet29, Ethernet29, Ethernet29, Ethernet29, Ethernet29, Ethernet29]
+    - name: leaf28
+      id: 28
+      mgmt_ip: 192.168.0.128
+      uplink_switch_interfaces: [Ethernet30, Ethernet30, Ethernet30, Ethernet30, Ethernet30, Ethernet30]
+    - name: leaf29
+      id: 29
+      mgmt_ip: 192.168.0.129
+      uplink_switch_interfaces: [Ethernet31, Ethernet31, Ethernet31, Ethernet31, Ethernet31, Ethernet31]
+    - name: leaf30
+      id: 30
+      mgmt_ip: 192.168.0.130
+      uplink_switch_interfaces: [Ethernet32, Ethernet32, Ethernet32, Ethernet32, Ethernet32, Ethernet32]
+    - name: leaf31
+      id: 31
+      mgmt_ip: 192.168.0.131
+      uplink_switch_interfaces: [Ethernet33, Ethernet33, Ethernet33, Ethernet33, Ethernet33, Ethernet33]
+    - name: leaf32
+      id: 32
+      mgmt_ip: 192.168.0.132
+      uplink_switch_interfaces: [Ethernet34, Ethernet34, Ethernet34, Ethernet34, Ethernet34, Ethernet34]
+    - name: leaf33
+      id: 33
+      mgmt_ip: 192.168.0.133
+      uplink_switch_interfaces: [Ethernet35, Ethernet35, Ethernet35, Ethernet35, Ethernet35, Ethernet35]
+    - name: leaf34
+      id: 34
+      mgmt_ip: 192.168.0.134
+      uplink_switch_interfaces: [Ethernet36, Ethernet36, Ethernet36, Ethernet36, Ethernet36, Ethernet36]
+    - name: leaf35
+      id: 35
+      mgmt_ip: 192.168.0.135
+      uplink_switch_interfaces: [Ethernet37, Ethernet37, Ethernet37, Ethernet37, Ethernet37, Ethernet37]
+    - name: leaf36
+      id: 36
+      mgmt_ip: 192.168.0.136
+      uplink_switch_interfaces: [Ethernet38, Ethernet38, Ethernet38, Ethernet38, Ethernet38, Ethernet38]
+    - name: leaf37
+      id: 37
+      mgmt_ip: 192.168.0.137
+      uplink_switch_interfaces: [Ethernet39, Ethernet39, Ethernet39, Ethernet39, Ethernet39, Ethernet39]
+    - name: leaf38
+      id: 38
+      mgmt_ip: 192.168.0.138
+      uplink_switch_interfaces: [Ethernet40, Ethernet40, Ethernet40, Ethernet40, Ethernet40, Ethernet40]
+    - name: leaf39
+      id: 39
+      mgmt_ip: 192.168.0.139
+      uplink_switch_interfaces: [Ethernet41, Ethernet41, Ethernet41, Ethernet41, Ethernet41, Ethernet41]
+    - name: leaf40
+      id: 40
+      mgmt_ip: 192.168.0.140
+      uplink_switch_interfaces: [Ethernet42, Ethernet42, Ethernet42, Ethernet42, Ethernet42, Ethernet42]
+    - name: leaf41
+      id: 41
+      mgmt_ip: 192.168.0.141
+      uplink_switch_interfaces: [Ethernet43, Ethernet43, Ethernet43, Ethernet43, Ethernet43, Ethernet43]
+    - name: leaf42
+      id: 42
+      mgmt_ip: 192.168.0.142
+      uplink_switch_interfaces: [Ethernet44, Ethernet44, Ethernet44, Ethernet44, Ethernet44, Ethernet44]
+    - name: leaf43
+      id: 43
+      mgmt_ip: 192.168.0.143
+      uplink_switch_interfaces: [Ethernet45, Ethernet45, Ethernet45, Ethernet45, Ethernet45, Ethernet45]
+    - name: leaf44
+      id: 44
+      mgmt_ip: 192.168.0.144
+      uplink_switch_interfaces: [Ethernet46, Ethernet46, Ethernet46, Ethernet46, Ethernet46, Ethernet46]
+    - name: leaf45
+      id: 45
+      mgmt_ip: 192.168.0.145
+      uplink_switch_interfaces: [Ethernet47, Ethernet47, Ethernet47, Ethernet47, Ethernet47, Ethernet47]
+    - name: leaf46
+      id: 46
+      mgmt_ip: 192.168.0.146
+      uplink_switch_interfaces: [Ethernet48, Ethernet48, Ethernet48, Ethernet48, Ethernet48, Ethernet48]
+    - name: leaf47
+      id: 47
+      mgmt_ip: 192.168.0.147
+      uplink_switch_interfaces: [Ethernet49, Ethernet49, Ethernet49, Ethernet49, Ethernet49, Ethernet49]
+    - name: leaf48
+      id: 48
+      mgmt_ip: 192.168.0.148
+      uplink_switch_interfaces: [Ethernet50, Ethernet50, Ethernet50, Ethernet50, Ethernet50, Ethernet50]
+    - name: leaf49
+      id: 49
+      mgmt_ip: 192.168.0.149
+      uplink_switch_interfaces: [Ethernet51, Ethernet51, Ethernet51, Ethernet51, Ethernet51, Ethernet51]
+    - name: leaf50
+      id: 50
+      mgmt_ip: 192.168.0.150
+      uplink_switch_interfaces: [Ethernet52, Ethernet52, Ethernet52, Ethernet52, Ethernet52, Ethernet52]
+    - name: leaf51
+      id: 51
+      mgmt_ip: 192.168.0.151
+      uplink_switch_interfaces: [Ethernet53, Ethernet53, Ethernet53, Ethernet53, Ethernet53, Ethernet53]
+    - name: leaf52
+      id: 52
+      mgmt_ip: 192.168.0.152
+      uplink_switch_interfaces: [Ethernet54, Ethernet54, Ethernet54, Ethernet54, Ethernet54, Ethernet54]
+    - name: leaf53
+      id: 53
+      mgmt_ip: 192.168.0.153
+      uplink_switch_interfaces: [Ethernet55, Ethernet55, Ethernet55, Ethernet55, Ethernet55, Ethernet55]
+    - name: leaf54
+      id: 54
+      mgmt_ip: 192.168.0.154
+      uplink_switch_interfaces: [Ethernet56, Ethernet56, Ethernet56, Ethernet56, Ethernet56, Ethernet56]
+    - name: leaf55
+      id: 55
+      mgmt_ip: 192.168.0.155
+      uplink_switch_interfaces: [Ethernet57, Ethernet57, Ethernet57, Ethernet57, Ethernet57, Ethernet57]
+    - name: leaf56
+      id: 56
+      mgmt_ip: 192.168.0.156
+      uplink_switch_interfaces: [Ethernet58, Ethernet58, Ethernet58, Ethernet58, Ethernet58, Ethernet58]
+    - name: leaf57
+      id: 57
+      mgmt_ip: 192.168.0.157
+      uplink_switch_interfaces: [Ethernet59, Ethernet59, Ethernet59, Ethernet59, Ethernet59, Ethernet59]
+    - name: leaf58
+      id: 58
+      mgmt_ip: 192.168.0.158
+      uplink_switch_interfaces: [Ethernet60, Ethernet60, Ethernet60, Ethernet60, Ethernet60, Ethernet60]
+    - name: leaf59
+      id: 59
+      mgmt_ip: 192.168.0.159
+      uplink_switch_interfaces: [Ethernet61, Ethernet61, Ethernet61, Ethernet61, Ethernet61, Ethernet61]
+    - name: leaf60
+      id: 60
+      mgmt_ip: 192.168.0.160
+      uplink_switch_interfaces: [Ethernet62, Ethernet62, Ethernet62, Ethernet62, Ethernet62, Ethernet62]
+    - name: leaf61
+      id: 61
+      mgmt_ip: 192.168.0.161
+      uplink_switch_interfaces: [Ethernet63, Ethernet63, Ethernet63, Ethernet63, Ethernet63, Ethernet63]
+    - name: leaf62
+      id: 62
+      mgmt_ip: 192.168.0.162
+      uplink_switch_interfaces: [Ethernet64, Ethernet64, Ethernet64, Ethernet64, Ethernet64, Ethernet64]
+    - name: leaf63
+      id: 63
+      mgmt_ip: 192.168.0.163
+      uplink_switch_interfaces: [Ethernet65, Ethernet65, Ethernet65, Ethernet65, Ethernet65, Ethernet65]
+    - name: leaf64
+      id: 64
+      mgmt_ip: 192.168.0.164
+      uplink_switch_interfaces: [Ethernet66, Ethernet66, Ethernet66, Ethernet66, Ethernet66, Ethernet66]
+    - name: leaf65
+      id: 65
+      mgmt_ip: 192.168.0.165
+      uplink_switch_interfaces: [Ethernet67, Ethernet67, Ethernet67, Ethernet67, Ethernet67, Ethernet67]
+    - name: leaf66
+      id: 66
+      mgmt_ip: 192.168.0.166
+      uplink_switch_interfaces: [Ethernet68, Ethernet68, Ethernet68, Ethernet68, Ethernet68, Ethernet68]
+    - name: leaf67
+      id: 67
+      mgmt_ip: 192.168.0.167
+      uplink_switch_interfaces: [Ethernet69, Ethernet69, Ethernet69, Ethernet69, Ethernet69, Ethernet69]
+    - name: leaf68
+      id: 68
+      mgmt_ip: 192.168.0.168
+      uplink_switch_interfaces: [Ethernet70, Ethernet70, Ethernet70, Ethernet70, Ethernet70, Ethernet70]
+    - name: leaf69
+      id: 69
+      mgmt_ip: 192.168.0.169
+      uplink_switch_interfaces: [Ethernet71, Ethernet71, Ethernet71, Ethernet71, Ethernet71, Ethernet71]
+    - name: leaf70
+      id: 70
+      mgmt_ip: 192.168.0.170
+      uplink_switch_interfaces: [Ethernet72, Ethernet72, Ethernet72, Ethernet72, Ethernet72, Ethernet72]
+    - name: leaf71
+      id: 71
+      mgmt_ip: 192.168.0.171
+      uplink_switch_interfaces: [Ethernet73, Ethernet73, Ethernet73, Ethernet73, Ethernet73, Ethernet73]
+    - name: leaf72
+      id: 72
+      mgmt_ip: 192.168.0.172
+      uplink_switch_interfaces: [Ethernet74, Ethernet74, Ethernet74, Ethernet74, Ethernet74, Ethernet74]
+    - name: leaf73
+      id: 73
+      mgmt_ip: 192.168.0.173
+      uplink_switch_interfaces: [Ethernet75, Ethernet75, Ethernet75, Ethernet75, Ethernet75, Ethernet75]
+    - name: leaf74
+      id: 74
+      mgmt_ip: 192.168.0.174
+      uplink_switch_interfaces: [Ethernet76, Ethernet76, Ethernet76, Ethernet76, Ethernet76, Ethernet76]
+    - name: leaf75
+      id: 75
+      mgmt_ip: 192.168.0.175
+      uplink_switch_interfaces: [Ethernet77, Ethernet77, Ethernet77, Ethernet77, Ethernet77, Ethernet77]
+    - name: leaf76
+      id: 76
+      mgmt_ip: 192.168.0.176
+      uplink_switch_interfaces: [Ethernet78, Ethernet78, Ethernet78, Ethernet78, Ethernet78, Ethernet78]
+    - name: leaf77
+      id: 77
+      mgmt_ip: 192.168.0.177
+      uplink_switch_interfaces: [Ethernet79, Ethernet79, Ethernet79, Ethernet79, Ethernet79, Ethernet79]
+    - name: leaf78
+      id: 78
+      mgmt_ip: 192.168.0.178
+      uplink_switch_interfaces: [Ethernet80, Ethernet80, Ethernet80, Ethernet80, Ethernet80, Ethernet80]
+    - name: leaf79
+      id: 79
+      mgmt_ip: 192.168.0.179
+      uplink_switch_interfaces: [Ethernet81, Ethernet81, Ethernet81, Ethernet81, Ethernet81, Ethernet81]
+    - name: leaf80
+      id: 80
+      mgmt_ip: 192.168.0.180
+      uplink_switch_interfaces: [Ethernet82, Ethernet82, Ethernet82, Ethernet82, Ethernet82, Ethernet82]
+    - name: leaf81
+      id: 81
+      mgmt_ip: 192.168.0.181
+      uplink_switch_interfaces: [Ethernet83, Ethernet83, Ethernet83, Ethernet83, Ethernet83, Ethernet83]
+    - name: leaf82
+      id: 82
+      mgmt_ip: 192.168.0.182
+      uplink_switch_interfaces: [Ethernet84, Ethernet84, Ethernet84, Ethernet84, Ethernet84, Ethernet84]
+    - name: leaf83
+      id: 83
+      mgmt_ip: 192.168.0.183
+      uplink_switch_interfaces: [Ethernet85, Ethernet85, Ethernet85, Ethernet85, Ethernet85, Ethernet85]
+    - name: leaf84
+      id: 84
+      mgmt_ip: 192.168.0.184
+      uplink_switch_interfaces: [Ethernet86, Ethernet86, Ethernet86, Ethernet86, Ethernet86, Ethernet86]
+    - name: leaf85
+      id: 85
+      mgmt_ip: 192.168.0.185
+      uplink_switch_interfaces: [Ethernet87, Ethernet87, Ethernet87, Ethernet87, Ethernet87, Ethernet87]
+    - name: leaf86
+      id: 86
+      mgmt_ip: 192.168.0.186
+      uplink_switch_interfaces: [Ethernet88, Ethernet88, Ethernet88, Ethernet88, Ethernet88, Ethernet88]
+    - name: leaf87
+      id: 87
+      mgmt_ip: 192.168.0.187
+      uplink_switch_interfaces: [Ethernet89, Ethernet89, Ethernet89, Ethernet89, Ethernet89, Ethernet89]
+    - name: leaf88
+      id: 88
+      mgmt_ip: 192.168.0.188
+      uplink_switch_interfaces: [Ethernet90, Ethernet90, Ethernet90, Ethernet90, Ethernet90, Ethernet90]
+    - name: leaf89
+      id: 89
+      mgmt_ip: 192.168.0.189
+      uplink_switch_interfaces: [Ethernet91, Ethernet91, Ethernet91, Ethernet91, Ethernet91, Ethernet91]
+    - name: leaf90
+      id: 90
+      mgmt_ip: 192.168.0.190
+      uplink_switch_interfaces: [Ethernet92, Ethernet92, Ethernet92, Ethernet92, Ethernet92, Ethernet92]
+    - name: leaf91
+      id: 91
+      mgmt_ip: 192.168.0.191
+      uplink_switch_interfaces: [Ethernet93, Ethernet93, Ethernet93, Ethernet93, Ethernet93, Ethernet93]
+    - name: leaf92
+      id: 92
+      mgmt_ip: 192.168.0.192
+      uplink_switch_interfaces: [Ethernet94, Ethernet94, Ethernet94, Ethernet94, Ethernet94, Ethernet94]
+    - name: leaf93
+      id: 93
+      mgmt_ip: 192.168.0.193
+      uplink_switch_interfaces: [Ethernet95, Ethernet95, Ethernet95, Ethernet95, Ethernet95, Ethernet95]
+    - name: leaf94
+      id: 94
+      mgmt_ip: 192.168.0.194
+      uplink_switch_interfaces: [Ethernet96, Ethernet96, Ethernet96, Ethernet96, Ethernet96, Ethernet96]
+    - name: leaf95
+      id: 95
+      mgmt_ip: 192.168.0.195
+      uplink_switch_interfaces: [Ethernet97, Ethernet97, Ethernet97, Ethernet97, Ethernet97, Ethernet97]
+    - name: leaf96
+      id: 96
+      mgmt_ip: 192.168.0.196
+      uplink_switch_interfaces: [Ethernet98, Ethernet98, Ethernet98, Ethernet98, Ethernet98, Ethernet98]
+    - name: leaf97
+      id: 97
+      mgmt_ip: 192.168.0.197
+      uplink_switch_interfaces: [Ethernet99, Ethernet99, Ethernet99, Ethernet99, Ethernet99, Ethernet99]
+    - name: leaf98
+      id: 98
+      mgmt_ip: 192.168.0.198
+      uplink_switch_interfaces: [Ethernet100, Ethernet100, Ethernet100, Ethernet100, Ethernet100, Ethernet100]
+    - name: leaf99
+      id: 99
+      mgmt_ip: 192.168.0.199
+      uplink_switch_interfaces: [Ethernet101, Ethernet101, Ethernet101, Ethernet101, Ethernet101, Ethernet101]
+
+        # There's an issue with vEOS with larger MTUs
+p2p_uplinks_mtu: 1500
+
+# BFD Settings
+bfd_multihop:
+  interval: 1200
+  min_rx: 1200
+  multiplier: 3
+
+
+# # If you want to put a password on peers
+# bgp_peer_groups:
+#   # all passwords set to "arista"
+#   evpn_overlay_peers:
+#     password: Q4fqtbqcZ7oQuKfuWtNGRQ==
+#   ipv4_underlay_peers:
+#     password: 7x4B4rnJhZB438m9+BrBfQ==
+#   mlag_ipv4_underlay_peer:
+#     password: 4b21pAdCvWeAqpcKDFMdWw==
+
+# Needed for vEOS/cEOS
+
+bgp_update_wait_install: false
+bgp_update_wait_for_convergence: false
+
+# Needed for Arista ATD Lab Environment
+dns_domain: atd.lab
+mgmt_interface: Management0
+mgmt_interface_vrf: MGMT
+mgmt_gateway: 192.168.0.1

@@ -1,0 +1,255 @@
+---
+all:
+  children:
+    CVP_cluster:
+      hosts: 
+        cvp1: 
+          ansible_httpapi_host: 192.168.0.5
+          ansible_host: 192.168.0.5
+          ansible_user: arista
+          ansible_password: arista1234
+          ansible_connection: httpapi
+          ansible_httpapi_use_ssl: True
+          ansible_httpapi_validate_certs: False
+          ansible_network_os: eos
+          ansible_httpapi_port: 443
+    FABRIC:
+      vars:
+        ansible_user: arista
+        ansible_ssh_pass: arista1234 # If using SSH keys, this can be removed
+# Use this section if you want to perform testing via the eAPI
+        # ansible_connection: httpapi
+        # ansible_httpapi_use_ssl: True
+        # ansible_httpapi_validate_certs: False
+        # ansible_network_os: eos
+        # ansible_httpapi_port: 443
+# Use this section if you want to perform testing via the CLI through SSH
+        ansible_connection: network_cli
+        ansible_network_os: eos
+        # ansible_become: yes
+        # ansible_become_method: enable
+      children:
+        SPINES:
+          vars:
+            type: spine
+          hosts:
+            spine1:
+              ansible_host: 192.168.0.11
+            spine2:
+              ansible_host: 192.168.0.12
+            spine3:
+              ansible_host: 192.168.0.13
+            spine4:
+              ansible_host: 192.168.0.14
+            spine5:
+              ansible_host: 192.168.0.15
+            spine6:
+              ansible_host: 192.168.0.16
+        LEAFS:
+          vars: 
+            type: l3leaf
+          hosts:
+            leaf1:
+              ansible_host: 192.168.0.21
+            leaf2:
+              ansible_host: 192.168.0.22
+            leaf3:
+              ansible_host: 192.168.0.23
+            leaf4:
+              ansible_host: 192.168.0.24
+            leaf5:
+              ansible_host: 192.168.0.105
+            leaf6:
+              ansible_host: 192.168.0.106
+            leaf7:
+              ansible_host: 192.168.0.107
+            leaf8:
+              ansible_host: 192.168.0.108
+            leaf9:
+              ansible_host: 192.168.0.109
+            leaf10:
+              ansible_host: 192.168.0.110
+            leaf11:
+              ansible_host: 192.168.0.111
+            leaf12:
+              ansible_host: 192.168.0.112
+            leaf13:
+              ansible_host: 192.168.0.113
+            leaf14:
+              ansible_host: 192.168.0.114
+            leaf15:
+              ansible_host: 192.168.0.115
+            leaf16:
+              ansible_host: 192.168.0.116
+            leaf17:
+              ansible_host: 192.168.0.117
+            leaf18:
+              ansible_host: 192.168.0.118
+            leaf19:
+              ansible_host: 192.168.0.119
+            leaf20:
+              ansible_host: 192.168.0.120
+            leaf21:
+              ansible_host: 192.168.0.121
+            leaf22:
+              ansible_host: 192.168.0.122
+            leaf23:
+              ansible_host: 192.168.0.123
+            leaf24:
+              ansible_host: 192.168.0.124
+            leaf25:
+              ansible_host: 192.168.0.125
+            leaf26:
+              ansible_host: 192.168.0.126
+            leaf27:
+              ansible_host: 192.168.0.127
+            leaf28:
+              ansible_host: 192.168.0.128
+            leaf29:
+              ansible_host: 192.168.0.129
+            leaf30:
+              ansible_host: 192.168.0.130
+            leaf31:
+              ansible_host: 192.168.0.131
+            leaf32:
+              ansible_host: 192.168.0.132
+            leaf33:
+              ansible_host: 192.168.0.133
+            leaf34:
+              ansible_host: 192.168.0.134
+            leaf35:
+              ansible_host: 192.168.0.135
+            leaf36:
+              ansible_host: 192.168.0.136
+            leaf37:
+              ansible_host: 192.168.0.137
+            leaf38:
+              ansible_host: 192.168.0.138
+            leaf39:
+              ansible_host: 192.168.0.139
+            leaf40:
+              ansible_host: 192.168.0.140
+            leaf41:
+              ansible_host: 192.168.0.141
+            leaf42:
+              ansible_host: 192.168.0.142
+            leaf43:
+              ansible_host: 192.168.0.143
+            leaf44:
+              ansible_host: 192.168.0.144
+            leaf45:
+              ansible_host: 192.168.0.145
+            leaf46:
+              ansible_host: 192.168.0.146
+            leaf47:
+              ansible_host: 192.168.0.147
+            leaf48:
+              ansible_host: 192.168.0.148
+            leaf49:
+              ansible_host: 192.168.0.149
+            leaf50:
+              ansible_host: 192.168.0.150
+            leaf51:
+              ansible_host: 192.168.0.151
+            leaf52:
+              ansible_host: 192.168.0.152
+            leaf53:
+              ansible_host: 192.168.0.153
+            leaf54:
+              ansible_host: 192.168.0.154
+            leaf55:
+              ansible_host: 192.168.0.155
+            leaf56:
+              ansible_host: 192.168.0.156
+            leaf57:
+              ansible_host: 192.168.0.157
+            leaf58:
+              ansible_host: 192.168.0.158
+            leaf59:
+              ansible_host: 192.168.0.159
+            leaf60:
+              ansible_host: 192.168.0.160
+            leaf61:
+              ansible_host: 192.168.0.161
+            leaf62:
+              ansible_host: 192.168.0.162
+            leaf63:
+              ansible_host: 192.168.0.163
+            leaf64:
+              ansible_host: 192.168.0.164
+            leaf65:
+              ansible_host: 192.168.0.165
+            leaf66:
+              ansible_host: 192.168.0.166
+            leaf67:
+              ansible_host: 192.168.0.167
+            leaf68:
+              ansible_host: 192.168.0.168
+            leaf69:
+              ansible_host: 192.168.0.169
+            leaf70:
+              ansible_host: 192.168.0.170
+            leaf71:
+              ansible_host: 192.168.0.171
+            leaf72:
+              ansible_host: 192.168.0.172
+            leaf73:
+              ansible_host: 192.168.0.173
+            leaf74:
+              ansible_host: 192.168.0.174
+            leaf75:
+              ansible_host: 192.168.0.175
+            leaf76:
+              ansible_host: 192.168.0.176
+            leaf77:
+              ansible_host: 192.168.0.177
+            leaf78:
+              ansible_host: 192.168.0.178
+            leaf79:
+              ansible_host: 192.168.0.179
+            leaf80:
+              ansible_host: 192.168.0.180
+            leaf81:
+              ansible_host: 192.168.0.181
+            leaf82:
+              ansible_host: 192.168.0.182
+            leaf83:
+              ansible_host: 192.168.0.183
+            leaf84:
+              ansible_host: 192.168.0.184
+            leaf85:
+              ansible_host: 192.168.0.185
+            leaf86:
+              ansible_host: 192.168.0.186
+            leaf87:
+              ansible_host: 192.168.0.187
+            leaf88:
+              ansible_host: 192.168.0.188
+            leaf89:
+              ansible_host: 192.168.0.189
+            leaf90:
+              ansible_host: 192.168.0.190
+            leaf91:
+              ansible_host: 192.168.0.191
+            leaf92:
+              ansible_host: 192.168.0.192
+            leaf93:
+              ansible_host: 192.168.0.193
+            leaf94:
+              ansible_host: 192.168.0.194
+            leaf95:
+              ansible_host: 192.168.0.195
+            leaf96:
+              ansible_host: 192.168.0.196
+            leaf97:
+              ansible_host: 192.168.0.197
+            leaf98:
+              ansible_host: 192.168.0.198
+            leaf99:
+              ansible_host: 192.168.0.199
+    EVPN_SERVICES:
+      children:
+        LEAFS:
+    ENDPOINT_CONNECT:
+      children:
+        LEAFS:
